@@ -1,0 +1,4 @@
+-külön szűrés tulajdonságokra (URl elővétel, TODO...)
+-felhasználói jogosultságok, felhasználó kezelése
+-csak bizonyos mennyiségű item mutatása
+-a script funkcióinak helyreállítása
