@@ -30,15 +30,21 @@ class Mysql
     /**
      * @throws Exception
      */
-    public function query($sql): array
+    public function query($sql): object
     {
-        $query = $this->mysqli->query($sql);
-        if (!$query) {
+        $data = [];
+        $result = $this->mysqli->query($sql);
+        if (!$result) {
             throw new Exception('Execution failed');
         }
-        if ($query->num_rows <= 0) {
+        if ($result->num_rows <= 0) {
             throw new Exception('Elkerdezesnek nincs eredmenye');
         }
-        return $query->fetch_all(MYSQLI_ASSOC);
+
+        while ($row = $result->fetch_object()) {
+            $data[] = $row;
+        }
+
+        return (object)$data;
     }
 }
