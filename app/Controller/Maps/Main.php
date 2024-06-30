@@ -8,7 +8,7 @@ use stdClass;
 
 class Main
 {
-    public int $MAIN_ID = 2;
+    public const MAIN_ID = 2;
     public Mysql $mysql;
     public object $parameters;
 
@@ -113,7 +113,7 @@ class Main
             SELECT `kitoro`.`neve`, `kitoro`.`db`, `kitoro`.`kep`
             FROM `palyan`
             LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
-            WHERE `palyan`.`palya` = " . $this->MAIN_ID . "
+            WHERE `palyan`.`palya` = " . self::MAIN_ID . "
             AND `palyan`.`kitoro` IS NOT NULL";
 
         return $this->mysql->query($sql);
@@ -134,7 +134,7 @@ class Main
             SELECT `rudak`.`neve`, `rudak`.`db`, `rudak`.`kep`
             FROM `palyan`
             LEFT JOIN `rudak` ON `palyan`.`rudak` = `rudak`.`id`
-            WHERE `palyan`.`palya` = " . $this->MAIN_ID . "
+            WHERE `palyan`.`palya` = " . self::MAIN_ID . "
             AND `palyan`.`rudak` IS NOT NULL";
 
         return $this->mysql->query($sql);
