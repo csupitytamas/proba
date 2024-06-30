@@ -14,16 +14,18 @@ new Vue({
             length: null,
         },
         poles: [],
+        wings: [],
     },
     mounted() {
         this.getData();
     },
     methods: {
         getData: async function () {
-            let url = '/main';
+            let url = '/main/on-field';
             let response = await this.getRequest(url)
-            this.$data.poles = response.data
-            console.log(this.$data.poles)
+            console.log(response.data)
+            this.$data.poles = response.data.poles
+            this.$data.wings = response.data.wings
         },
         getRequest: async function (url) {
             try {

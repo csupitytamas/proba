@@ -24,8 +24,10 @@
             </tr>
             </thead>
             <tbody>
-                <tr @click="selectRow()">
-                    <td></td>
+                <tr v-for="wings in this.$data.wings" @click="selectRow()">
+                    <td>{{ wings.neve }}</td>
+                    <td>{{ wings.db }}</td>
+                    <td>{{ wings.kep }}</td>
                 </tr>
             </tbody>
         </table>
@@ -44,9 +46,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr @click="selectRow()">
-                <td v-for="pole in this.$data.poles.data">{{ pole }}</td>
-            </tr>
+                <tr v-for="pole in this.$data.poles" @click="selectRow()">
+                    <td>{{ pole.neve }}</td>
+                    <td>{{ pole.db }}</td>
+                    <td>{{ pole.hossz }}</td>
+                    <td>{{ pole.kep }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
