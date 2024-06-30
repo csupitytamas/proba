@@ -1,11 +1,16 @@
 <?php
 
+namespace App\database;
+
+use Exception;
+use mysqli;
+
 class Mysql
 {
-    public const serverName = "localhost";
+    public const serverName = "mysql";
     public const username = "root";
-    public const password = "modmq888";
-    public const databaseName = "myDB";
+    public const password = "root";
+    public const databaseName = "samorin";
 
     private mysqli $mysqli;
 
@@ -17,8 +22,7 @@ class Mysql
         $this->mysqli = new mysqli(self::serverName, self::username, self::password, self::databaseName);
         $this->mysqli->set_charset("utf8");
 
-        if($this->mysqli->connect_error)
-        {
+        if ($this->mysqli->connect_error) {
             throw new Exception('Database connection failed: ' . $this->mysqli->connect_error);
         }
     }
@@ -29,12 +33,12 @@ class Mysql
     public function query($sql): array
     {
         $query = $this->mysqli->query($sql);
-        if(!$query) {
+        if (!$query) {
             throw new Exception('Execution failed');
         }
-        if($query->num_rows <= 0) {
+        if ($query->num_rows <= 0) {
             throw new Exception('Elkerdezesnek nincs eredmenye');
         }
-        return $query->fetch_all( MYSQLI_ASSOC );
+        return $query->fetch_all(MYSQLI_ASSOC);
     }
 }

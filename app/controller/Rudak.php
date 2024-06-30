@@ -1,6 +1,11 @@
 <?php
+
+namespace controller;
+
+use App\app\database\Mysql;
+use Exception;
+
 try {
-    include('../Mysql.php');
     $mysql = new Mysql();
     $hossz = null;
     if (isset($_GET['hossz'])) {
