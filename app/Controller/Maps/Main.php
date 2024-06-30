@@ -33,21 +33,28 @@ class Main
         header('Content-Type: application/json');
         return json_encode($response);
     }
-    public function newWings()
+
+    /**
+     * Add new wings to field.
+     *
+     * @return object The result of the MySQL query.
+     * @throws Exception when the $_POST variable is not set.
+     */
+    public function newWings(): object
     {
-        try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->query($sqlKitoro);
-
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->query($sqlRudak);
-
-            header('Content-Type: application/json');
-            return $queryRudak;
-        } catch (Exception $exception) {
-            die( $exception->getMessage() );
+        if (!isset($_POST)) {
+            throw new Exception('POST method only allowed');
         }
+
+        $sql = "
+            INSERT INTO kitoro (neve,db,kep)
+            VALUES (" . $_POST["neve"] . "," . $_POST["db"] . "," . $_POST["kep"] . ")
+        ";
+
+        $result = $this->mysql->query($sql);
+
+        header('Content-Type: application/json');
+        return $result;
     }
     public function newPoles()
     {
@@ -110,13 +117,13 @@ class Main
     private function getWingsOnField(): object
     {
         $sql = "
-            SELECT `kitoro`.`neve`, `kitoro`.`db`, `kitoro`.`kep`
+            SELECT `kitoro`.*
             FROM `palyan`
             LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
             WHERE `palyan`.`palya` = " . self::MAIN_ID . "
             AND `palyan`.`kitoro` IS NOT NULL";
 
-        return $this->mysql->query($sql);
+        return $this->mysql->queryObject($sql);
     }
 
     /**
@@ -131,12 +138,12 @@ class Main
     private function getPolesOnField(): object
     {
         $sql = "
-            SELECT `rudak`.`neve`, `rudak`.`db`, `rudak`.`kep`
+            SELECT `rudak`.*
             FROM `palyan`
             LEFT JOIN `rudak` ON `palyan`.`rudak` = `rudak`.`id`
             WHERE `palyan`.`palya` = " . self::MAIN_ID . "
             AND `palyan`.`rudak` IS NOT NULL";
 
-        return $this->mysql->query($sql);
+        return $this->mysql->queryObject($sql);
     }
 }
