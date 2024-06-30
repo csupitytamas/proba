@@ -28,9 +28,15 @@ class Mysql
     }
 
     /**
-     * @throws Exception
+     * Executes a SQL query and returns the result as an object.
+     *
+     * @param string $sql The SQL query to be executed.
+     *
+     * @return object The result of the query as an object.
+     *
+     * @throws Exception If the execution of the query fails or if there are no results.
      */
-    public function query($sql): object
+    public function queryObject(string $sql): object
     {
         $data = [];
         $result = $this->mysqli->query($sql);
@@ -46,5 +52,32 @@ class Mysql
         }
 
         return (object)$data;
+    }
+
+    /**
+     * Queries the database and returns the result as an array.
+     *
+     * @param string $sql The SQL query to execute.
+     *
+     * @return array The result of the query as an associative array.
+     * @throws Exception If the query execution failed or there is no result.
+     *
+     */
+    public function queryArray(string $sql): array
+    {
+        $data = [];
+        $result = $this->mysqli->query($sql);
+        if (!$result) {
+            throw new Exception('Execution failed');
+        }
+        if ($result->num_rows <= 0) {
+            throw new Exception('Elkerdezesnek nincs eredmenye');
+        }
+
+        while ($row = $result->fetch_row()) {
+            $data[] = $row;
+        }
+
+        return $data;
     }
 }
