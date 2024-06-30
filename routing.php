@@ -7,20 +7,14 @@ try {
     $urlArray = explode( "/", trim( str_replace( '%7C', '|', $_SERVER['REQUEST_URI'] ), "/" ) );
     $parameters = new StdClass();
     if ($urlArray[0] ?? false) {
-        Request::calculateGetParameters($urlArray[0], $parameters);
-        if (str_contains($urlArray[0], "?")) {
-            $urlArray[0] = strstr($urlArray[0], '?', true);
-        }
+        Request::calculateUrlAndParameters($urlArray[0], $parameters);
         switch ($urlArray[0]) {
             case 'farriers':
                 include('farriers.php');
                 exit;
             case 'main':
                 if ($urlArray[1] ?? false) {
-                    Request::calculateGetParameters($urlArray[1], $parameters);
-                    if (str_contains($urlArray[1], "?")) {
-                        $urlArray[1] = strstr($urlArray[1], '?', true);
-                    }
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
                     $view = new Main($parameters);
                     switch ($urlArray[1]) {
                         case 'on-field':
