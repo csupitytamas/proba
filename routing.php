@@ -9,9 +9,6 @@ try {
     if ($urlArray[0] ?? false) {
         Request::calculateUrlAndParameters($urlArray[0], $parameters);
         switch ($urlArray[0]) {
-            case 'farriers':
-                include('farriers.php');
-                exit;
             case 'main':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
@@ -39,12 +36,98 @@ try {
                 }
                 include('app/View/main.html');
                 exit;
+
+
             case 'respect':
-                include('respect.php');
+                if ($urlArray[1] ?? false) {
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
+                    $view = new Respect($parameters);
+                    switch ($urlArray[1]) {
+                        case 'on-field':
+                            echo $view->getAllData();
+                            exit;
+                        case 'new-wings':
+                            echo $view->newWings();
+                            exit;
+                        case 'new-poles':
+                            echo $view->newPoles();
+                            exit;
+                        case 'delete-wing':
+                            echo $view->deleteWings();
+                            exit;
+                        case 'delete-poles':
+                            echo $view->deletePoles();
+                            exit;
+                        default:
+                            include ('app/View/home.html');
+                            exit;
+                    }
+                }
+                include('app/View/respect.html');
                 exit;
+
+
+            case 'farriers':
+                if ($urlArray[1] ?? false) {
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
+                    $view = new Farriers($parameters);
+                    switch ($urlArray[2]) {
+                        case 'on-field':
+                            echo $view->getAllData();
+                            exit;
+                        case 'new-wings':
+                            echo $view->newWings();
+                            exit;
+                        case 'new-poles':
+                            echo $view->newPoles();
+                            exit;
+                        case 'delete-wing':
+                            echo $view->deleteWings();
+                            exit;
+                        case 'delete-poles':
+                            echo $view->deletePoles();
+                            exit;
+                        default:
+                            include ('app/View/home.html');
+                            exit;
+                    }
+                }
+                include('app/View/farriers.html');
+                exit;
+
             case 'raktar':
-                include('raktar.php');
+                if ($urlArray[1] ?? false) {
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
+                    $view = new Storage($parameters);
+                    switch ($urlArray[2]) {
+                        case 'on-field':
+                            echo $view->getAllData();
+                            exit;
+                        case 'new-wings':
+                            echo $view->newWings();
+                            exit;
+                        case 'new-poles':
+                            echo $view->newPoles();
+                            exit;
+                        case 'delete-wing':
+                            echo $view->deleteWings();
+                            exit;
+                        case 'delete-poles':
+                            echo $view->deletePoles();
+                            exit;
+                        default:
+                            include ('app/View/home.html');
+                            exit;
+                    }
+                }
+                include('app/View/raktar.html');
                 exit;
+
+            case 'switch_lang':
+                if (isset($parameters->lang)) {
+                    setcookie('lang', $parameters->lang, time() + (86400 * 30), "/"); // 86400 = 1 day
+                };
+                break;
             default:
                 include ('app/View/home.html');
                 exit;
@@ -55,7 +138,7 @@ try {
     header('Content-Type: application/json');
     echo json_encode([
         'status' => 'error',
-        'message' => $exception->getMessage()
+        'message' => $exception->getMessage() . " | " . $exception->getFile() . " | " . $exception->getLine()
     ]);
     exit;
 }
