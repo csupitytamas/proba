@@ -95,7 +95,7 @@ try {
                 include('app/View/farriers.html');
                 exit;
 
-            case 'raktar':
+            case 'storage':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
                     $view = new Storage($parameters);
@@ -120,7 +120,7 @@ try {
                             exit;
                     }
                 }
-                include('app/View/raktar.html');
+                include('app/View/storage.html');
                 exit;
 
             case 'switch_lang':

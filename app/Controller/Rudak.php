@@ -1,25 +1,52 @@
 <?php
 
-namespace controller;
+namespace App\controller;
 
-use App\app\database\Mysql;
+use App\database\Mysql;
 use Exception;
 
-try {
-    $mysql = new Mysql();
-    $hossz = null;
-    if (isset($_GET['hossz'])) {
-        $hossz = $_GET['hossz'];
+class Rudak {
+
+    private Mysql $mysql;
+
+    public function __construct()
+    {
+        $this->mysql = new Mysql();
     }
 
-    $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
-    if(!is_null($hossz)) {
-        $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak WHERE hossz = '{$hossz}'";
-    }
-    $queryRudak = $mysql->query($sqlRudak);
-    header("Content-Type: application/json");
-    echo json_encode($queryRudak);
+    /**
+     * @return false|string
+     */
+    public function create(): false|string
+    {
+        try {
+            if (!isset($_POST['name_en']) || !isset($_POST['name_hu']) || !isset($_POST['db']) || !isset($_POST['hossz']) || !isset($_POST['kep'])) {
+                throw new Exception('Nincs megfelelő posztolt adat a mentéshez.');
+            }
 
-} catch (Exception $exception) {
-    die( $exception->getMessage() );
+            $sql = "
+                INSERT INTO rudak (name_en, name_hu, db, hossz,kep)
+                Values ('{$_POST['name_en']}', {$_POST['name_hu']}','{$_POST['db']}', '{$_POST['hossz']}', '{$_POST['kep']}');
+            ";
+
+            $result = $this->mysql->queryObject($sql);
+
+            header('Content-Type: application/json');
+            if (empty($result)) {
+                return json_encode([
+                    'status' => 'error',
+                    'message' => "Kitorot nem lehet elmenteni."
+                ]);
+            }
+            return json_encode([
+                'status' => 'success'
+            ]);
+        } catch (Exception $e) {
+            header('Content-Type: application/json', true, 400);
+            return json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

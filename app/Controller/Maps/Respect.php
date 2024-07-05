@@ -87,10 +87,10 @@ class Respect extends AbstractMaps
     {
         try {
             $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
+            $sqlKitoro = "SELECT `name_en`,`name_hu`, `db`, `kep` FROM kitoro";
             $queryKitoro = $this->mysql->queryObject($sqlKitoro);
 
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
+            $sqlRudak = "SELECT `name_en`,`name_hu`, `db`, `hossz`, `kep` FROM rudak";
             $queryRudak = $this->mysql->queryObject($sqlRudak);
 
             header('Content-Type: application/json');
@@ -103,10 +103,10 @@ class Respect extends AbstractMaps
     {
         try {
             $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
+            $sqlKitoro = "SELECT `name_en`,`name_hu`, `db`, `kep` FROM kitoro";
             $queryKitoro = $this->mysql->queryObject($sqlKitoro);
 
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
+            $sqlRudak = "SELECT `name_en`,`name_hu`, `db`, `hossz`, `kep` FROM rudak";
             $queryRudak = $this->mysql->queryObject($sqlRudak);
 
             header('Content-Type: application/json');
@@ -119,10 +119,10 @@ class Respect extends AbstractMaps
     {
         try {
             $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
+            $sqlKitoro = "SELECT `name_en`,`name_hu`, `db`, `kep` FROM kitoro";
             $queryKitoro = $this->mysql->queryObject($sqlKitoro);
 
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
+            $sqlRudak = "SELECT `name_en`,`name_hu`, `db`, `hossz`, `kep` FROM rudak";
             $queryRudak = $this->mysql->queryObject($sqlRudak);
 
             header('Content-Type: application/json');

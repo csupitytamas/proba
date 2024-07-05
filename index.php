@@ -7,6 +7,10 @@ error_reporting( E_ALL );
 
 require __DIR__ . '/vendor/autoload.php';
 
+if (!isset($_COOKIE['lang'])) {
+    setcookie('lang', 'en', time() + (86400 * 30), "/");
+}
+
 require_once( "routing.php" );
 
 if (file_exists('users.json')) {

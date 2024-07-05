@@ -2,30 +2,28 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShowJumpEditor</title>
-    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../css/mainpage.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
-<body>
-<h1>Samorin Show Jumps</h1>
 <header>
-    <p>User</p>
-    <template id="modal-template">
-        <div class="modal" v-if="showModal">
-            <div class="modal-content">
-                <form method="post">
-                    <label>Username: <input type="email" name="email" required></label><br><br>
-                    <label>Password: <input type="password" name="password" required></label><br><br>
-                    <input @click="openModal" type="submit" value="Login">
-                </form>
-            </div>
-        </div>
-    </template>
+        <h1>SAMORIN SHOW JUMPS</h1>
+        <a onclick="href='../Controller/Login/login.php'">
+            <img id="user_img" src="/img/Sample_User_Icon.png" alt="user_img">
+        </a>
 </header>
-<button onclick="location.href='main.php'">Main</button>
-<button onclick="location.href='respect.php'">Respect</button>
-<button onclick="location.href='farriers.php'">Farriers</button>
-<button onclick="location.href='raktar.php'">Storage</button>
-<script src="../../js/main.js"></script>
+<body>
+        <h2>ARENAS:</h2>
+        <button class="butt" id="main-butt" onclick="location.href='main.html'">MAIN</button> <br>
+        <button class="butt" id="respect-butt" onclick="location.href='respect.html'">RESPECT</button> <br>
+        <button class="butt" id="farriers-butt" onclick="location.href='farriers.html'">FARRIERS</button> <br>
+        <h2>WAREHOUSE:</h2>
+        <button class="butt" id="storage-butt" onclick="location.href='storage.html'">STORAGE</button> <br>
+    <script src="../../js/main.js"></script>
+
 </body>
+<footer>
+    <p>ShowJumpEditor</p>
+</footer>
 </html>
