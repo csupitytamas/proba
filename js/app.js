@@ -1,16 +1,10 @@
-new Vue({
-    el: 'header',
-    data() {
-        return {
-            showModal: false
-        };
-    },
-    methods: {
-        openModal() {
-            this.showModal = true;
-        },
-        closeModal() {
-            this.showModal = false;
-        }
-    }
+const langImg = document.getElementById("lang-img");
+const langSelect = document.getElementById("language-select");
+
+langImg.addEventListener("click", () => {
+    langSelect.style.display = "block";
+
+});
+langSelect.addEventListener("change", () => {
+    langSelect.style.display = "none";
 });

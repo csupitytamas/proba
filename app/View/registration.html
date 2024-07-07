@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>Register</title>
+</head>
+<body>
+<form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+    <h2>Register</h2><br>
+
+    <p v-show="this.$data.notification.show">{{ this.$data.notification.message }}</p>
+    <label>Username</label>
+    <input type="text" name="username">
+
+    <label>Password</label>
+    <input type="text" name="password">
+
+    <button type="submit" name="submit">Sign Up</button>
+
+    <p class="error"><?php echo @$user->error ?></p>
+    <p class="success"><?php echo @$user->success ?></p>
+
+    <h3>(Back to the Login)</h3>
+    <a href="/auth/login-page"><button type="button">Login</button></a>
+</form>
+<script src="../../js/registration.js"></script>
+</body>
+</html>

@@ -16,7 +16,8 @@
 
 <body>
 <div id="app">
-    <div class="table-container">
+    <div class="table-container">regfistration
+
         <table class="table wings-table">
             <thead>
             <tr>
@@ -30,7 +31,8 @@
             </thead>
             <tbody>
                 <tr v-for="wings in this.$data.wings" @click="selectRow($event)">
-                    <td>{{ wings.neve }}</td>
+                    <td v-if="this.$data.cookie == 'hu'">{{ wings.name_hu }}</td>
+                    <td v-else>{{ wings.name_en }}</td>
                     <td>{{ wings.db }}</td>
                     <td>{{ wings.kep }}</td>
                 </tr>
@@ -90,7 +92,7 @@
         <button class="button_del" @click="deleteSelectedRow">DELETE</button>
     </div>
 </div>
-<script src="/js/main.js"></script>
+<script src="../../js/main.js"></script>
 <footer>
     <p>ShowJumpEditor</p>
 </footer>

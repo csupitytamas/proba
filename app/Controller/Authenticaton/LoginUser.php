@@ -20,17 +20,5 @@ class LoginUser{
     }
 
 
-    private function login(){
-        foreach ($this->stored_users as $user) {
-            if($user['username'] == $this->username){
-                if(password_verify($this->password, $user['password'])){
-                    session_start();
-                    $_SESSION['user'] = $this->username;
-                    header("location: account.php"); exit();
-                }
-            }
-        }
-        return $this->error = "Wrong username or password";
-    }
 
 }

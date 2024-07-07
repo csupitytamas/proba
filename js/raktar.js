@@ -21,7 +21,7 @@ new Vue({
     },
     methods: {
         getData: async function () {
-            let url = '/main/on-field';
+            let url = '/storage/on-field';
             let response = await this.getRequest(url)
             console.log(response.data)
             this.$data.poles = response.data.poles
@@ -41,12 +41,7 @@ new Vue({
             let table;
             let newRow = document.createElement('tr');
             newRow.addEventListener('click', this.selectRow);
-            if (this.selectedOption === 'kitörők') {
-                if(this.newRow.number % 2 !== 0){
-                    alert('The number must be even for WINGS.');
-                    this.showLabel = false;
-                    return;
-                }
+            if (this.selectedOption === 'kitoro') {
                 table = document.querySelector('.wings-table tbody');
                 newRow.innerHTML = `<td>${this.newRow.name}</td><td>${this.newRow.number}</td><td><img src="img/kep1.jpg" alt="Példa kép" style="max-width: 200px; max-height: 200px;"></td>`;
             } else if (this.selectedOption === 'rudak') {

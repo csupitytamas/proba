@@ -1,6 +1,7 @@
 new Vue({
     el: '#app',
     data: {
+        cookie: null,
         showLabel: false,
         showForm: false,
         selectedOption: '',
@@ -17,6 +18,7 @@ new Vue({
         wings: [],
     },
     mounted() {
+        this.$data.cookie = this.getCookie();
         this.getData();
     },
     methods: {
@@ -26,6 +28,23 @@ new Vue({
             console.log(response.data)
             this.$data.poles = response.data.poles
             this.$data.wings = response.data.wings
+        },
+        switchLanguage: async function () {
+            let url = '/switch-lang?lang=' + this.$data.selectedLang;
+            let response = await this.getRequest(url)
+        },
+        getCookie: function () {
+            let cookieArr = document.cookie.split("; ");
+
+            for(let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+
+                if ('lang' === cookiePair[0]) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+
+            return null;
         },
         getRequest: async function (url) {
             try {
@@ -41,12 +60,7 @@ new Vue({
             let table;
             let newRow = document.createElement('tr');
             newRow.addEventListener('click', this.selectRow);
-            if (this.selectedOption === 'kitörők') {
-                if(this.newRow.number % 2 !== 0){
-                    alert('The number must be even for WINGS.');
-                    this.showLabel = false;
-                    return;
-                }
+            if (this.selectedOption === 'kitoro') {
                 table = document.querySelector('.wings-table tbody');
                 newRow.innerHTML = `<td>${this.newRow.name}</td><td>${this.newRow.number}</td><td><img src="img/kep1.jpg" alt="Példa kép" style="max-width: 200px; max-height: 200px;"></td>`;
             } else if (this.selectedOption === 'rudak') {
@@ -54,6 +68,8 @@ new Vue({
                 newRow.innerHTML = `<td>${this.newRow.name}</td><td>${this.newRow.number}</td><td>${this.newRow.length}</td><td><img src="img/kep1.jpg" alt="Példa kép" style="max-width: 200px; max-height: 200px;">`;
             }
             table.appendChild(newRow);
+
+
             this.showLabel = true;
 
             this.newRow = {
@@ -96,8 +112,6 @@ new Vue({
             }
         },
         refresh: function () {
-            // TODO url-nek le kell kérned js-el az aktualis url-t es hozzafuzni a hossz parametert
-            // TODO JS-el ellenőrizni, hogy az url-ben található-e kérdőjel ha igen akkor "&hossz=" ha nem akkor pedig "?hossz="
             let url = window.location.href;
             if (url.includes('?')) {
                 param = "&hossz=";

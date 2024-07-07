@@ -5,13 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShowJumpEditor</title>
     <link rel="stylesheet" href="../../css/mainpage.css">
+    <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <header>
         <h1>SAMORIN SHOW JUMPS</h1>
-        <a onclick="href='../Controller/Login/login.php'">
-            <img id="user_img" src="/img/Sample_User_Icon.png" alt="user_img">
-        </a>
+            <div class="header-content">
+                <a onclick="href='../Controller/Authenticaton/login.php'">
+                    <img id="user_img" src="/img/Sample_User_Icon.png" alt="user_img">
+                </a>
+                <div class="lang">
+                    <img id="lang-img" src="/img/484633.png" alt="lang-img">
+                    <select id=language-select style="display: none; ">
+                        <option style="font-weight: bolder">Select Language:</option>
+                        <option value="EN">English</option>
+                        <option value="HU">Magyar</option>
+                    </select>
+                </div>
+            </div>
+
 </header>
 <body>
         <h2>ARENAS:</h2>
@@ -20,9 +32,9 @@
         <button class="butt" id="farriers-butt" onclick="location.href='farriers.html'">FARRIERS</button> <br>
         <h2>WAREHOUSE:</h2>
         <button class="butt" id="storage-butt" onclick="location.href='storage.html'">STORAGE</button> <br>
-    <script src="../../js/main.js"></script>
 
 </body>
+    <script src="../../js/app.js"></script>
 <footer>
     <p>ShowJumpEditor</p>
 </footer>
