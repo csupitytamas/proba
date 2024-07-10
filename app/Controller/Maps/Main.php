@@ -31,77 +31,109 @@ class Main
         $response->poles = $this->getPolesOnField();
 
         header('Content-Type: application/json');
-        return json_encode($response);
+        return $this->jsonResponse($response);
     }
 
     /**
      * Add new wings to field.
      *
-     * @return object The result of the MySQL query.
+     * @return string The result of the MySQL query.
      * @throws Exception when the $_POST variable is not set.
      */
-    public function newWings(): object
+    public function addWingsToMain(): string
     {
-        if (!isset($_POST)) {
-            throw new Exception('POST method only allowed');
-        }
+        try {
+           $this->getPostCheck();
 
-        $sql = "
-            INSERT INTO kitoro (neve,db,kep)
-            VALUES (" . $_POST["neve"] . "," . $_POST["db"] . "," . $_POST["kep"] . ")
+            $sql = "
+            INSERT INTO kitoro (name_hu, name_en,db,kep)
+            VALUES (" . $_POST["name_hu"] . "," . $_POST["name_en"] . "," . $_POST["db"] . "," . $_POST["kep"] . ")
         ";
 
-        $result = $this->mysql->query($sql);
-
-        header('Content-Type: application/json');
-        return $result;
-    }
-    public function newPoles()
-    {
-        try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->query($sqlKitoro);
-
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->query($sqlRudak);
+            $result = $this->mysql->queryObject($sql);
 
             header('Content-Type: application/json');
-            return $queryRudak;
+            return $this->jsonResponse($result);
         } catch (Exception $exception) {
-            die( $exception->getMessage() );
+            return $this->getExceptionFormat($exception->getMessage());
         }
     }
-    public function deleteWings()
+
+    /**
+     * @return object|string
+     */
+    public function addPolesOnMain(): object|string
     {
         try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->query($sqlKitoro);
+            $this->getPostCheck();
 
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->query($sqlRudak);
+            $sql = "
+                INSERT INTO rudak (name_hu, name_en,db,, hossz, kep)
+                VALUES (" . $_POST['name_hu'] . "," . $_POST['name_en'] . "," . $_POST['db'] . "," .$_POST['hossz'] . "," . $_POST['kep'] . ")
+            ";
+
+            $result = $this->mysql->queryObject($sql);
 
             header('Content-Type: application/json');
-            return $queryRudak;
+            return $this->jsonResponse($result);
         } catch (Exception $exception) {
-            die( $exception->getMessage() );
+            return $this->getExceptionFormat($exception->getMessage());
         }
     }
-    public function deletePoles()
+
+    /**
+     * @return false|string
+     */
+    public function deleteWings(): false|string
     {
         try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `neve`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->query($sqlKitoro);
+            $this->getPostCheck();
 
-            $sqlRudak = "SELECT `neve`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->query($sqlRudak);
+            $sql = "
+                DELETE FROM palyan WHERE rudak IS NULL AND kitoro = " . $_POST["id"] . "
+            ";
+
+            $result = $this->mysql->query($sql);
+
+            if ($result) {
+                throw new Exception("Delete don't execute");
+            }
 
             header('Content-Type: application/json');
-            return $queryRudak;
+            return json_encode([
+                'status' => 'success',
+                'deleted_id' => $_POST["id"]
+            ]);
         } catch (Exception $exception) {
-            die( $exception->getMessage() );
+            return $this->getExceptionFormat($exception->getMessage());
+        }
+    }
+
+    /**
+     * @return false|string
+     */
+    public function deletePoles(): false|string
+    {
+        try {
+            $this->getPostCheck();
+
+            $sql = "
+                DELETE FROM palyan WHERE kitoro IS NULL AND rudak = " . $_POST["id"] . "
+            ";
+
+            $result = $this->mysql->query($sql);
+
+            if ($result) {
+                throw new Exception("Delete don't execute");
+            }
+
+            header('Content-Type: application/json');
+            return json_encode([
+                'status' => 'success',
+                'deleted_id' => $_POST["id"]
+            ]);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
         }
     }
 
@@ -145,5 +177,43 @@ class Main
             AND `palyan`.`rudak` IS NOT NULL";
 
         return $this->mysql->queryObject($sql);
+    }
+
+    /**
+     * @param $message
+     *
+     * @return string
+     */
+    private function getExceptionFormat($message): string
+    {
+        $data = [
+            'status' => 'error',
+            'message' => $message
+        ];
+        return $this->jsonResponse($data);
+    }
+
+    /**
+     * @param     $data
+     * @param int $status
+     *
+     * @return false|string
+     */
+    private function jsonResponse($data, int $status = 200): false|string
+    {
+        header('Content-Type: application/json');
+        // TODO add bad request header status code
+        return json_encode($data);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    private function getPostCheck(): void
+    {
+        if (!isset($_POST)) {
+            throw new Exception('POST method only allowed');
+        }
     }
 }
