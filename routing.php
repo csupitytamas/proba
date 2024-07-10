@@ -34,7 +34,7 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
-                            include ('app/View/home.html');
+                            include ('app/View/main.html');
                             exit;
                     }
                 }
@@ -49,19 +49,19 @@ try {
                             echo $view->getAllData();
                             exit;
                         case 'new-wings':
-                            echo $view->newWings();
+                            echo $view->addWingsToField();
                             exit;
                         case 'new-poles':
-                            echo $view->newPoles();
+                            echo $view->addPolesToField();
                             exit;
                         case 'delete-wing':
-                            echo $view->deleteWings();
+                            echo $view->deleteWingsFromField();
                             exit;
                         case 'delete-poles':
-                            echo $view->deletePoles();
+                            echo $view->deletePolesFromField();
                             exit;
                         default:
-                            include ('app/View/home.html');
+                            include ('app/View/respect.html');
                             exit;
                     }
                 }

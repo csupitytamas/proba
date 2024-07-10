@@ -14,30 +14,31 @@ class Respect extends AbstractMaps
     private int $fieldId;
 
     /**
-     * @throws Exception
+     * Constructor method for the class.
+     *
+     * @param object $parameters An array of parameters for the constructor.
+     *
+     * @return void
      */
-    public function __construct($parameters)
+    public function __construct(object $parameters)
     {
         $this->mysql = new Mysql();
-        $this->fieldId = $this->getFieldId();
         $this->parameters = $parameters;
+        $this->fieldId = $this->getFieldId();
     }
 
     /**
-     * Get the main arena id from palyak
+     * Sets the ID based on a SQL query to retrieve the ID from the "palyak" table.
      *
-     * @return string       The id of main arena
-     * @throws Exception    Sql exception
+     * @return string Returns the SQL query to retrieve the ID.
      */
-    protected function getFieldId(): string
+    protected function setId(): string
     {
-        $sql = "
+        return "
             SELECT `id`
             FROM palyak
-            WHERE `neve` = '" . self::FIELD_NAME . "'";
-
-        $result = $this->mysql->queryObject($sql);
-        return $result->id;
+            WHERE `neve` = '" . self::FIELD_NAME . "'
+        ";
     }
 
     /**
@@ -51,85 +52,8 @@ class Respect extends AbstractMaps
         $response = new StdClass();
         $response->wings = $this->getWingsOnField();
         $response->poles = $this->getPolesOnField();
-        // get all poles
-        // get all wings
 
-        header('Content-Type: application/json');
-        return json_encode($response);
-    }
-
-    /**
-     * Add new wings to field.
-     *
-     * @return object The result of the MySQL query.
-     * @throws Exception when the $_POST variable is not set.
-     */
-    public function newWings(): object
-    {
-        if (!isset($_POST)) {
-            throw new Exception('POST method only allowed');
-        }
-        if (!isset($_POST['kitoro']) ||!isset($_POST['rudak']) || !isset($_POST['palya'])) {
-            throw new Exception('Nincs megfelelő posztolt adat a mentéshez.');
-        }
-
-        $sql = "
-            INSERT INTO palyan (kitoro,rudak,palya)
-            VALUES (" . $_POST["kitoro"] . "," . $_POST["rudak"] . "," . $_POST["palya"] . ")
-        ";
-
-        $result = $this->mysql->queryObject($sql);
-
-        header('Content-Type: application/json');
-        return $result;
-    }
-    public function newPoles()
-    {
-        try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `name_en`,`name_hu`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->queryObject($sqlKitoro);
-
-            $sqlRudak = "SELECT `name_en`,`name_hu`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->queryObject($sqlRudak);
-
-            header('Content-Type: application/json');
-            return $queryRudak;
-        } catch (Exception $exception) {
-            die( $exception->getMessage() );
-        }
-    }
-    public function deleteWings()
-    {
-        try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `name_en`,`name_hu`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->queryObject($sqlKitoro);
-
-            $sqlRudak = "SELECT `name_en`,`name_hu`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->queryObject($sqlRudak);
-
-            header('Content-Type: application/json');
-            return $queryRudak;
-        } catch (Exception $exception) {
-            die( $exception->getMessage() );
-        }
-    }
-    public function deletePoles()
-    {
-        try {
-            $sqlPalyak = "SELECT `id` FROM palyak";
-            $sqlKitoro = "SELECT `name_en`,`name_hu`, `db`, `kep` FROM kitoro";
-            $queryKitoro = $this->mysql->queryObject($sqlKitoro);
-
-            $sqlRudak = "SELECT `name_en`,`name_hu`, `db`, `hossz`, `kep` FROM rudak";
-            $queryRudak = $this->mysql->queryObject($sqlRudak);
-
-            header('Content-Type: application/json');
-            return $queryRudak;
-        } catch (Exception $exception) {
-            die( $exception->getMessage() );
-        }
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -149,17 +73,6 @@ class Respect extends AbstractMaps
             LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
             WHERE `palyan`.`palya` = " . $this->fieldId . "
             AND `palyan`.`kitoro` IS NOT NULL";
-
-        foreach ( $this->parameters as $key => $value ) {
-            switch ($key) {
-                case 'neve':
-                    $sql .= "AND `kitoro`.`neve` = '" . $value . "'";
-                    break;
-                case 'db':
-                    $sql .= "AND `kitoro`.`db` = '" . $value . "'";
-                    break;
-            }
-        }
 
         return $this->mysql->queryObject($sql);
     }
@@ -182,19 +95,56 @@ class Respect extends AbstractMaps
             WHERE `palyan`.`palya` = " . $this->fieldId . "
             AND `palyan`.`rudak` IS NOT NULL";
 
-        foreach ( $this->parameters as $key => $value ) {
-            switch ($key) {
-                case 'name':
-                    $sql .= "AND `rudak`.`neve` = '" . $value . "'";
-                    break;
-                case 'db':
-                    $sql .= "AND `rudak`.`db` = '" . $value . "'";
-                    break;
-                case 'hossz':
-                    $sql .= "AND `rudak`.`hossz` = '" . $value . "'";
-                    break;
-            }
-        }
         return $this->mysql->queryObject($sql);
+    }
+
+    /**
+     * Adds wings to the "kitoro" table.
+     *
+     * @return string The SQL query for inserting the wings.
+     */
+    protected function addWings(): string
+    {
+        return "
+            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+            VALUES (" . $_POST['kitoro'] . "," . null . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ") 
+        ";
+    }
+
+    /**
+     * Inserts data into the "rudak" table based on user input.
+     *
+     * @return string Returns the SQL query to add poles.
+     */
+    protected function addPoles(): string
+    {
+        return "
+            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+            VALUES (" . null . "," . $_POST['rudak'] . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ")
+        ";
+    }
+
+    /**
+     * Deletes the wings from the "palyan" table based on specific conditions.
+     *
+     * @return string Returns the SQL query to delete the wings.
+     */
+    public function deleteWings(): string
+    {
+        return "
+            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND rudak IS NULL AND kitoro = " . $_POST["id"] . "
+        ";
+    }
+
+    /**
+     * Deletes the poles from the "palyan" table based on specific conditions.
+     *
+     * @return string Returns the SQL query to delete the poles.
+     */
+    public function deletePoles(): string
+    {
+        return "
+            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = " . $_POST["id"] . "
+        ";
     }
 }
