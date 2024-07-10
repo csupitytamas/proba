@@ -1,6 +1,10 @@
 <?php
 
+use App\Controller\Maps\Farriers;
 use App\Controller\Maps\Main;
+use App\Controller\Maps\Respect;
+use App\Controller\Maps\Storage;
+use App\Controller\User;
 use App\Helpers\Request;
 
 try {
@@ -36,8 +40,6 @@ try {
                 }
                 include('app/View/main.html');
                 exit;
-
-
             case 'respect':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
@@ -65,8 +67,6 @@ try {
                 }
                 include('app/View/respect.html');
                 exit;
-
-
             case 'farriers':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
@@ -94,7 +94,6 @@ try {
                 }
                 include('app/View/farriers.html');
                 exit;
-
             case 'storage':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
@@ -122,12 +121,53 @@ try {
                 }
                 include('app/View/storage.html');
                 exit;
-
-            case 'switch_lang':
+            case 'switch-lang':
                 if (isset($parameters->lang)) {
                     setcookie('lang', $parameters->lang, time() + (86400 * 30), "/"); // 86400 = 1 day
-                };
-                break;
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'success',
+                        'selected_lang' => $parameters->lang
+                    ]);
+                }
+                else {
+                    header("HTTP/1.1 400 Bad Request");
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Nem volt lang paraméter átadva, hogy eltároljuk'
+                    ]);
+                }
+                exit;
+            case 'auth':
+                if ($urlArray[1] ?? false) {
+                    $user = new User($_POST);
+                    switch ($urlArray[1]) {
+                        case 'login':
+                            echo $user->login();
+                            exit;
+                        case 'login-page':
+                            include ('app/View/login.html');
+                            exit;
+                        case 'registration':
+                            echo $user->registration();
+                            exit;
+                        case 'registration-page':
+                            include ('app/View/registration.html');
+                            exit;
+                        case 'get-roles':
+                            echo $user->getRoles();
+                            exit;
+                        case 'get-permissions':
+                            echo $user->getPermissions();
+                            exit;
+                        default:
+                            include ('app/View/home.html');
+                            exit;
+                    }
+                }
+                include ('app/View/home.html');
+                exit;
             default:
                 include ('app/View/home.html');
                 exit;

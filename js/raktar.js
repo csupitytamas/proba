@@ -15,9 +15,9 @@ new Vue({
         },
         poles: [],
         wings: [],
-    },
-    mounted() {
-        this.getData();
+        selectedCategory: '',
+        inputValue: '',
+        selectedLength: ''
     },
     methods: {
         getData: async function () {
@@ -63,6 +63,10 @@ new Vue({
             }
             this.selectedRow = event.currentTarget;
             this.selectedRow.classList.add('selected');
+            if (!this.selectedRow) {
+                alert('Select an item.');
+            }
+
         },
         deleteRow(event) {
             event.stopPropagation();
@@ -80,14 +84,15 @@ new Vue({
             }
 
         },
-        moveToWarehouse() {
-            if (this.selectedRow) {
-                if (confirm('Move to the Storage?')) {
-                    this.selectedRow.remove();
-                    this.selectedRow = null;
+        watch: {
+            selectedCategory(value) {
+                if (value === 'name') {
+                    this.selectedLength = '';
+                } else if (value === 'number') {
+                    this.selectedLength = '';
+                } else if (value === 'length') {
+                    this.inputValue = '';
                 }
-            } else {
-                alert('Select to move');
             }
         },
         refresh: function () {
@@ -106,4 +111,5 @@ new Vue({
             }
         }
     }
+
 });

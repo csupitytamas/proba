@@ -1,11 +1,11 @@
-<?php use App\Controller\Login\LoginUser;
+<?php use App\Controller\Login\RegisterUser;
 
 session_start();
 
-require("LoginUser.php") ?>
+require("RegisterUser.php") ?>
 <?php
 	if(isset($_POST['submit'])){
-		$user = new LoginUser($_POST['username'], $_POST['password']);
+		$user = new RegisterUser($_POST['username'], $_POST['password']);
 	}
 ?>
 <!DOCTYPE html>
@@ -14,11 +14,11 @@ require("LoginUser.php") ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/login.css">
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
 <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-    <h2>Login</h2>
+    <h2>Register</h2><br>
 
     <label>Username</label>
     <input type="text" name="username">
@@ -26,14 +26,11 @@ require("LoginUser.php") ?>
     <label>Password</label>
     <input type="text" name="password">
 
-    <button type="submit" name="submit">Login</button>
+    <button type="submit" name="submit">Sign Up</button>
 
     <p class="error"><?php echo @$user->error ?></p>
     <p class="success"><?php echo @$user->success ?></p>
 
-    <h3> (If you are not registered)</h3>
-    <button onclick="window.location.href = 'register.php';" type="button">Sign Up</button>
-    <button onclick="window.location.href = '../../View/home.html';" type="button">Back to the Home</button>
 </form>
 </body>
 </html>

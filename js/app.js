@@ -1,10 +1,38 @@
-const langImg = document.getElementById("lang-img");
-const langSelect = document.getElementById("language-select");
+new Vue({
+    el: '#app',
+    data: {
+        languageSelector: {
+            show: false,
+            selectedLanguage: 'en',
+            selectedLanguageEn: true
+        },
+        search: {
+            searchFreeText: '',
+            searchType: [],
+            searchExtraParams: []
+        }
+    },
+    methods: {
+        changeLanguage: async function () {
+            this.$data.languageSelector.selectedLanguage = this.$data.languageSelector.selectedLanguageEn ? 'en' : 'hu'
+            let url = '/switch-lang?lang=' + this.$data.languageSelector.selectedLanguage;
+            let response = await this.getRequest(url)
 
-langImg.addEventListener("click", () => {
-    langSelect.style.display = "block";
-
-});
-langSelect.addEventListener("change", () => {
-    langSelect.style.display = "none";
+            if (response.data.status === 'success') {
+                this.$data.languageSelector.selectedLanguage = response.data.selected_lang
+            } else {
+                console.log('Valami hiba van')
+            }
+        },
+        getRequest: async function (url) {
+            try {
+                return await axios.get(url)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        toggleForm() {
+            this.showForm = this.selectedOption === 'kitoro' || this.selectedOption === 'rudak';
+        }
+    }
 });

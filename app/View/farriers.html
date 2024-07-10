@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Main Arena</title>
+    <title>Farriers</title>
     <link rel="stylesheet" href="../../css/index.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 
 <header>
-    <h1>MAIN ARENA</h1>
-
+    <h1>FARRIERS ARENA</h1>
+    <div class="search-container">
+        <form class="search" action="">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
 </header>
-
 <body>
 <div id="app">
     <div class="table-container">
@@ -70,21 +74,21 @@
         </select>
     </div>
     <div id="formContainer" v-show="showForm">
-        <form @submit.prevent="addRow" method="POST">
+        <form class="form" @submit.prevent="addRow" method="POST">
             <label style="text-align: center; font-size: larger; font-weight: bold" for="name">Name:</label> <br>
             <input type="text" style="text-align: center; font-size: larger" id="name" v-model="newRow.name"> <br>
             <label style="text-align: center; font-size: larger; font-weight: bold" for="darabszam">Number:</label> <br>
-            <input type="number" name="db" style="text-align: center ; font-size: larger;" id="darabszam" v-model="newRow.number" min="1"> <br>
+            <input type="number" style="text-align: center ; font-size: larger;" id="darabszam" v-model="newRow.number" min="1"> <br>
             <div v-if="selectedOption === 'rudak'">
                 <label style="text-align: center; font-size: larger; font-weight: bold" for="length">Length:</label> <br>
-                <select id="length" name="hossz" style="text-align: center; font-size: large" v-model="newRow.length" @change="">
+                <select id="length" style="text-align: center; font-size: large" v-model="newRow.length" @change="">
                     <option value="3.5">3,5 meter</option>
                     <option value="3">3 meter</option>
                     <option value="2.5">2,5 meter</option>
                     <option value="2">2 meter</option>
                 </select> <br>
             </div>
-            <button class="button-ok" type="submit">OK</button>
+            <button class="button-ok" type="submit">ADD</button>
         </form>
     </div>
     <div>
