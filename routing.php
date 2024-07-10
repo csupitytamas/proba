@@ -18,10 +18,10 @@ try {
                             echo $view->getAllData();
                             exit;
                         case 'new-wings':
-                            echo $view->newWings();
+                            echo $view->addWingsToMain();
                             exit;
                         case 'new-poles':
-                            echo $view->newPoles();
+                            echo $view->addPolesOnMain();
                             exit;
                         case 'delete-wing':
                             echo $view->deleteWings();
