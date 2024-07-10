@@ -6,16 +6,39 @@ use App\Database\Mysql;
 use Exception;
 use stdClass;
 
-class Main
+class Main extends AbstractMaps
 {
-    public const MAIN_ID = 2;
+    public const FIELD_NAME = 'main';
     public Mysql $mysql;
     public object $parameters;
+    public int $fieldId;
 
-    public function __construct($parameters)
+    /**
+     * Constructor method for the class.
+     *
+     * @param object $parameters An array of parameters for the constructor.
+     *
+     * @return void
+     */
+    public function __construct(object $parameters)
     {
         $this->mysql = new Mysql();
         $this->parameters = $parameters;
+        $this->fieldId = $this->getFieldId();
+    }
+
+    /**
+     * Sets the ID based on a SQL query to retrieve the ID from the "palyak" table.
+     *
+     * @return string Returns the SQL query to retrieve the ID.
+     */
+    protected function setId(): string
+    {
+        return "
+            SELECT `id`
+            FROM palyak
+            WHERE `neve` = '" . self::FIELD_NAME . "'
+        ";
     }
 
     /**
@@ -30,111 +53,7 @@ class Main
         $response->wings = $this->getWingsOnField();
         $response->poles = $this->getPolesOnField();
 
-        header('Content-Type: application/json');
         return $this->jsonResponse($response);
-    }
-
-    /**
-     * Add new wings to field.
-     *
-     * @return string The result of the MySQL query.
-     * @throws Exception when the $_POST variable is not set.
-     */
-    public function addWingsToMain(): string
-    {
-        try {
-           $this->getPostCheck();
-
-            $sql = "
-            INSERT INTO kitoro (name_hu, name_en,db,kep)
-            VALUES (" . $_POST["name_hu"] . "," . $_POST["name_en"] . "," . $_POST["db"] . "," . $_POST["kep"] . ")
-        ";
-
-            $result = $this->mysql->queryObject($sql);
-
-            header('Content-Type: application/json');
-            return $this->jsonResponse($result);
-        } catch (Exception $exception) {
-            return $this->getExceptionFormat($exception->getMessage());
-        }
-    }
-
-    /**
-     * @return object|string
-     */
-    public function addPolesOnMain(): object|string
-    {
-        try {
-            $this->getPostCheck();
-
-            $sql = "
-                INSERT INTO rudak (name_hu, name_en,db,, hossz, kep)
-                VALUES (" . $_POST['name_hu'] . "," . $_POST['name_en'] . "," . $_POST['db'] . "," .$_POST['hossz'] . "," . $_POST['kep'] . ")
-            ";
-
-            $result = $this->mysql->queryObject($sql);
-
-            header('Content-Type: application/json');
-            return $this->jsonResponse($result);
-        } catch (Exception $exception) {
-            return $this->getExceptionFormat($exception->getMessage());
-        }
-    }
-
-    /**
-     * @return false|string
-     */
-    public function deleteWings(): false|string
-    {
-        try {
-            $this->getPostCheck();
-
-            $sql = "
-                DELETE FROM palyan WHERE rudak IS NULL AND kitoro = " . $_POST["id"] . "
-            ";
-
-            $result = $this->mysql->query($sql);
-
-            if ($result) {
-                throw new Exception("Delete don't execute");
-            }
-
-            header('Content-Type: application/json');
-            return json_encode([
-                'status' => 'success',
-                'deleted_id' => $_POST["id"]
-            ]);
-        } catch (Exception $exception) {
-            return $this->getExceptionFormat($exception->getMessage());
-        }
-    }
-
-    /**
-     * @return false|string
-     */
-    public function deletePoles(): false|string
-    {
-        try {
-            $this->getPostCheck();
-
-            $sql = "
-                DELETE FROM palyan WHERE kitoro IS NULL AND rudak = " . $_POST["id"] . "
-            ";
-
-            $result = $this->mysql->query($sql);
-
-            if ($result) {
-                throw new Exception("Delete don't execute");
-            }
-
-            header('Content-Type: application/json');
-            return json_encode([
-                'status' => 'success',
-                'deleted_id' => $_POST["id"]
-            ]);
-        } catch (Exception $exception) {
-            return $this->getExceptionFormat($exception->getMessage());
-        }
     }
 
     /**
@@ -146,13 +65,13 @@ class Main
      * @return object An array containing the information of the wings on the field.
      * @throws Exception
      */
-    private function getWingsOnField(): object
+    protected function getWingsOnField(): object
     {
         $sql = "
             SELECT `kitoro`.*
             FROM `palyan`
             LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
-            WHERE `palyan`.`palya` = " . self::MAIN_ID . "
+            WHERE `palyan`.`palya` = " . $this->fieldId . "
             AND `palyan`.`kitoro` IS NOT NULL";
 
         return $this->mysql->queryObject($sql);
@@ -167,53 +86,65 @@ class Main
      * @return object An array containing the information of the poles on the field.
      * @throws Exception
      */
-    private function getPolesOnField(): object
+    protected function getPolesOnField(): object
     {
         $sql = "
             SELECT `rudak`.*
             FROM `palyan`
             LEFT JOIN `rudak` ON `palyan`.`rudak` = `rudak`.`id`
-            WHERE `palyan`.`palya` = " . self::MAIN_ID . "
+            WHERE `palyan`.`palya` = " . $this->fieldId . "
             AND `palyan`.`rudak` IS NOT NULL";
 
         return $this->mysql->queryObject($sql);
     }
 
     /**
-     * @param $message
+     * Adds wings to the "kitoro" table.
      *
-     * @return string
+     * @return string The SQL query for inserting the wings.
      */
-    private function getExceptionFormat($message): string
+    protected function addWings(): string
     {
-        $data = [
-            'status' => 'error',
-            'message' => $message
-        ];
-        return $this->jsonResponse($data);
+        return "
+            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+            VALUES (" . $_POST['kitoro'] . "," . null . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ") 
+        ";
     }
 
     /**
-     * @param     $data
-     * @param int $status
+     * Inserts data into the "rudak" table based on user input.
      *
-     * @return false|string
+     * @return string Returns the SQL query to add poles.
      */
-    private function jsonResponse($data, int $status = 200): false|string
+    protected function addPoles(): string
     {
-        header('Content-Type: application/json');
-        // TODO add bad request header status code
-        return json_encode($data);
+        return "
+            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+            VALUES (" . null . "," . $_POST['rudak'] . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ")
+        ";
     }
 
     /**
-     * @return void
-     * @throws Exception
+     * Deletes the wings from the "palyan" table based on specific conditions.
+     *
+     * @return string Returns the SQL query to delete the wings.
      */
-    private function getPostCheck(): void
+    public function deleteWings(): string
     {
-        if (!isset($_POST)) {
-            throw new Exception('POST method only allowed');
-        }
+        return "
+            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND rudak IS NULL AND kitoro = " . $_POST["id"] . "
+        ";
+    }
+
+    /**
+     * Deletes the poles from the "palyan" table based on specific conditions.
+     *
+     * @return string Returns the SQL query to delete the poles.
+     */
+    public function deletePoles(): string
+    {
+        return "
+            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = " . $_POST["id"] . "
+        ";
     }
 }

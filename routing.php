@@ -22,16 +22,16 @@ try {
                             echo $view->getAllData();
                             exit;
                         case 'new-wings':
-                            echo $view->addWingsToMain();
+                            echo $view->addWingsToField();
                             exit;
                         case 'new-poles':
-                            echo $view->addPolesOnMain();
+                            echo $view->addPolesToField();
                             exit;
                         case 'delete-wing':
-                            echo $view->deleteWings();
+                            echo $view->deleteWingsFromField();
                             exit;
                         case 'delete-poles':
-                            echo $view->deletePoles();
+                            echo $view->deletePolesFromField();
                             exit;
                         default:
                             include ('app/View/home.html');
