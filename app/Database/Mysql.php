@@ -4,6 +4,7 @@ namespace App\database;
 
 use Exception;
 use mysqli;
+use mysqli_result;
 
 class Mysql
 {
@@ -40,12 +41,7 @@ class Mysql
     {
         $data = [];
         $result = $this->mysqli->query($sql);
-        if (!$result) {
-            throw new Exception('Execution failed');
-        }
-        if ($result->num_rows <= 0) {
-            throw new Exception('Elkerdezesnek nincs eredmenye');
-        }
+        $this->executionCheck($result);
 
         while ($row = $result->fetch_object()) {
             $data[] = $row;
@@ -67,17 +63,39 @@ class Mysql
     {
         $data = [];
         $result = $this->mysqli->query($sql);
-        if (!$result) {
-            throw new Exception('Execution failed');
-        }
-        if ($result->num_rows <= 0) {
-            throw new Exception('Elkerdezesnek nincs eredmenye');
-        }
+        $this->executionCheck($result);
 
         while ($row = $result->fetch_row()) {
             $data[] = $row;
         }
 
         return $data;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function query(string $sql): mysqli_result|bool
+    {
+        if (empty($sql)) {
+            throw new Exception();
+        }
+        $result = $this->mysqli->query($sql);
+        $this->executionCheck($result);
+
+        return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function executionCheck($query): void
+    {
+        if (!$query) {
+            throw new Exception('Execution failed');
+        }
+        if ($query->num_rows <= 0) {
+            throw new Exception('Elkerdezesnek nincs eredmenye');
+        }
     }
 }
