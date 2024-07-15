@@ -34,8 +34,8 @@
             </thead>
             <tbody>
             <tr v-for="wings in this.$data.wings" @click="selectRow($event)">
-                <td v-if="this.$data.cookie == 'hu'">{{ wings.name_hu }}</td>
-                <td v-else>{{ wings.name_en }}</td>
+                <td v-show="cookie == 'hu'">{{ wings.name_hu }}</td>
+                <td v-show="cookie == 'en'">{{ wings.name_en }}</td>
                 <td>{{ wings.db }}</td>
                 <td>{{ wings.kep }}</td>
             </tr>
@@ -57,8 +57,8 @@
             </thead>
             <tbody>
             <tr v-for="pole in this.$data.poles" @click="selectRow($event)">
-                <td v-if="this.$data.cookie == 'hu'">{{ wings.name_hu }}</td>
-                <td v-else>{{ wings.name_en }}</td>
+                <td v-show="cookie == 'hu'">{{ pole.name_hu }}</td>
+                <td v-show="cookie == 'en'">{{ pole.name_en }}</td>
                 <td>{{ pole.db }}</td>
                 <td>{{ pole.hossz }}</td>
                 <td>{{ pole.kep }}</td>
