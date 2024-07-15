@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowJumpEditor</title>
+    <link rel="stylesheet" href="../../css/mainpage.css">
+    <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="flex">
+            <h1>SAMORIN SHOW JUMPS</h1>
+            <div class="header-content flex flex-row justify-center items-center">
+                <a onclick="href='../Controller/Authenticaton/login.php'" >
+                    <img id="user_img" src="/img/Sample_User_Icon.png" alt="user_img">
+                </a>
+                <p>HU</p>
+                <input  type="checkbox"
+                        v-model="languageSelector.selectedLanguageEn"
+                        @change="changeLanguage"
+                        class="toggle border-blue-500 bg-blue-500 [--tglbg:yellow] hover:bg-blue-700"/>
+                <p>EN</p>
+            </div>
+        </header>
+        <div>
+            <h2>ARENAS:</h2>
+            <button class="butt" id="main-butt" onclick="location.href='/main'">MAIN</button> <br>
+            <button class="butt" id="respect-butt" onclick="location.href='/respect'">RESPECT</button> <br>
+            <button class="butt" id="farriers-butt" onclick="location.href='/farriers'">FARRIERS</button> <br>
+            <h2>STOCK:</h2>
+            <button class="butt" id="storage-butt" onclick="location.href='/storage'">STORAGE</button> <br>
+        </div>
+        <footer>
+            <p>ShowJumpEditor</p>
+        </footer>
+    </div>
+</body>
+    <script src="../../js/app.js"></script>
+<footer>
+    <p>ShowJumpEditor</p>
+</footer>
+</html>
