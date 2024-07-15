@@ -2,12 +2,14 @@
 
 namespace App\Controller\Maps;
 
+use App\Controller\Traits\Response;
 use App\database\Mysql;
 use Exception;
 use stdClass;
 class Respect extends AbstractMaps
-
 {
+    use Response;
+
     public const FIELD_NAME = 'respect';
     public Mysql $mysql;
     public object $parameters;

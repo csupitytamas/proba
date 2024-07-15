@@ -2,12 +2,15 @@
 
 namespace App\Controller\Maps;
 
+use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
 use stdClass;
 
 class Main extends AbstractMaps
 {
+    use Response;
+
     public const FIELD_NAME = 'main';
     public Mysql $mysql;
     public object $parameters;

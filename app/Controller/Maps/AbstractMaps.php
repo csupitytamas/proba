@@ -2,10 +2,13 @@
 
 namespace App\Controller\Maps;
 
+use App\Controller\Traits\Response;
 use Exception;
 
 abstract class AbstractMaps
 {
+    use Response;
+
     abstract protected function getAllData();
 
     abstract protected function getWingsOnField();
@@ -109,42 +112,4 @@ abstract class AbstractMaps
         }
     }
     abstract protected function deletePoles();
-
-    /**
-     * @param $message
-     *
-     * @return string
-     */
-    protected function getExceptionFormat($message): string
-    {
-        $data = [
-            'status' => 'error',
-            'message' => $message
-        ];
-        return $this->jsonResponse($data);
-    }
-
-    /**
-     * @param     $data
-     * @param int $status
-     *
-     * @return false|string
-     */
-    protected function jsonResponse($data, int $status = 200): false|string
-    {
-        header('Content-Type: application/json');
-        // TODO add bad request header status code
-        return json_encode($data);
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function getPostCheck(): void
-    {
-        if (!isset($_POST)) {
-            throw new Exception('POST method only allowed');
-        }
-    }
 }
