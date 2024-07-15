@@ -44,10 +44,23 @@ VALUES  (1,"stroge"),
         (4,"farriers");
 
 INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
-VALUES  (1, null, 2),
-        (2, null, 2),
-        (3, null, 2),
-        (null, 1, 2),
-        (null, 2, 2),
-        (null, 3, 2),
-        (null, 4, 2);
+VALUES  (1, null, 2, 4, null),
+        (2, null, 2, 2, null),
+        (3, null, 2, 6, null),
+        (null, 1, 2, 6, 3.5),
+        (null, 2, 2, 9, 3),
+        (null, 3, 2, 12, 2.5),
+        (null, 4, 2, 8, 2);
+
+INSERT INTO kitoro (name_hu, name_en, db, kep)
+VALUES  ('samorin', 'samorin', 2, 'test.jpg'),
+        ('playboy', 'playboy', 4, 'test.jpg'),
+        ('érme', 'coin', 6, 'test.jpg'),
+        ('euro', 'euro', 8, 'test.jpg');
+
+INSERT INTO rudak (name_hu, name_en, db, hossz, kep)
+VALUES  ('kek', 'blue', 12, 2.5, 'test.jpg'),
+        ('fekete', 'black', 10, 3.5, 'test.jpg'),
+        ('sárga', 'yellow', 6, 2.5, 'test.jpg'),
+        ('zöld', 'green', 15, 3, 'test.jpg'),
+        ('piros', 'red', 7, 2, 'test.jpg');
