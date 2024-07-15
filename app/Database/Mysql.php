@@ -1,6 +1,6 @@
 <?php
 
-namespace App\database;
+namespace App\Database;
 
 use Exception;
 use mysqli;
@@ -8,10 +8,10 @@ use mysqli_result;
 
 class Mysql
 {
-    public const serverName = "localhost";
+    public const serverName = "mysql";
     public const username = "root";
-    public const password = "";
-    public const databaseName = "test";
+    public const password = "root";
+    public const databaseName = "samorin";
 
     private mysqli $mysqli;
 
@@ -42,6 +42,10 @@ class Mysql
         $data = [];
         $result = $this->mysqli->query($sql);
         $this->executionCheck($result);
+
+        if ($result->num_rows == 1) {
+            return $result->fetch_object();
+        }
 
         while ($row = $result->fetch_object()) {
             $data[] = $row;
@@ -78,7 +82,7 @@ class Mysql
     public function query(string $sql): mysqli_result|bool
     {
         if (empty($sql)) {
-            throw new Exception();
+            throw new Exception("Empty query");
         }
         $result = $this->mysqli->query($sql);
         $this->executionCheck($result);
@@ -97,5 +101,35 @@ class Mysql
         if ($query->num_rows <= 0) {
             throw new Exception('Elkerdezesnek nincs eredmenye');
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function insert(string $sql): bool
+    {
+        if (empty($sql)) {
+            throw new Exception("Empty query");
+        }
+        $result = $this->mysqli->query($sql);
+        if (!is_bool($result)) {
+            throw new Exception("Hiba az insert során.");
+        }
+        return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(string $sql): bool
+    {
+        if (empty($sql)) {
+            throw new Exception("Empty query");
+        }
+        $result = $this->mysqli->query($sql);
+        if (!is_bool($result)) {
+            throw new Exception("Hiba az insert során.");
+        }
+        return $result;
     }
 }
