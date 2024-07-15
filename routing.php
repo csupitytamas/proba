@@ -1,5 +1,7 @@
 <?php
 
+use App\Controller\Entities\Kitoro;
+use App\Controller\Entities\Rudak;
 use App\Controller\Maps\Farriers;
 use App\Controller\Maps\Main;
 use App\Controller\Maps\Respect;
@@ -116,6 +118,60 @@ try {
                             exit;
                         default:
                             include ('app/View/storage.html');
+                            exit;
+                    }
+                }
+                include('app/View/storage.html');
+                exit;
+            case 'poles':
+                if ($urlArray[1] ?? false) {
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
+                    $poleEntity = new Rudak($parameters);
+                    switch ($urlArray[1]) {
+                        case 'get-poles':
+                            echo $poleEntity->gelAll();
+                            exit;
+                        case 'get-pole':
+                            echo $poleEntity->get();
+                            exit;
+                        case 'new-pole':
+                            echo $poleEntity->create();
+                            exit;
+                        case 'update-pole':
+                            echo $poleEntity->update();
+                            exit;
+                        case 'delete-pole':
+                            echo $poleEntity->delete();
+                            exit;
+                        default:
+                            include ('app/View/home.html');
+                            exit;
+                    }
+                }
+                include('app/View/storage.html');
+                exit;
+            case 'wings':
+                if ($urlArray[1] ?? false) {
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
+                    $wingsEntity = new Kitoro($parameters);
+                    switch ($urlArray[1]) {
+                        case 'get-wings':
+                            echo $wingsEntity->gelAll();
+                            exit;
+                        case 'get-wing':
+                            echo $wingsEntity->get();
+                            exit;
+                        case 'new-wing':
+                            echo $wingsEntity->create();
+                            exit;
+                        case 'update-wing':
+                            echo $wingsEntity->update();
+                            exit;
+                        case 'delete-wing':
+                            echo $wingsEntity->delete();
+                            exit;
+                        default:
+                            include ('app/View/home.html');
                             exit;
                     }
                 }
