@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Entities;
 
 use App\database\Mysql;
 use Exception;

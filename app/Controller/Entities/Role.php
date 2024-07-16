@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Entities;
 
-class Permission
+class Role
 {
     public function add() {
         // TODO SQL futtatás
