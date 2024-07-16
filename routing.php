@@ -36,10 +36,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/main.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/main.html');
                 exit;
             case 'respect':
@@ -63,10 +65,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/respect.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/respect.html');
                 exit;
             case 'farriers':
@@ -90,10 +94,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/farriers.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/farriers.html');
                 exit;
             case 'storage':
@@ -117,10 +123,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/storage.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/storage.html');
                 exit;
             case 'poles':
@@ -203,12 +211,14 @@ try {
                             echo $user->login();
                             exit;
                         case 'login-page':
+                            include('app/View/layout.html');
                             include ('app/View/login.html');
                             exit;
                         case 'registration':
                             echo $user->registration();
                             exit;
                         case 'registration-page':
+                            include('app/View/layout.html');
                             include ('app/View/registration.html');
                             exit;
                         case 'get-roles':
@@ -218,17 +228,21 @@ try {
                             echo $user->getPermissions();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/home.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include ('app/View/home.html');
                 exit;
             default:
+                include('app/View/layout.html');
                 include ('app/View/home.html');
                 exit;
         }
     }
+    include('app/View/layout.html');
     include ('app/View/home.html');
 } catch (Exception $exception) {
     header('Content-Type: application/json');
