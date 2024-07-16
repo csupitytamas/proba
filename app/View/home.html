@@ -6,8 +6,9 @@
     <title>ShowJumpEditor</title>
     <link rel="stylesheet" href="../../css/mainpage.css">
     <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -22,6 +23,7 @@
                 <input  type="checkbox"
                         v-model="languageSelector.selectedLanguageEn"
                         @change="changeLanguage"
+                        checked="checked"
                         class="toggle border-blue-500 bg-blue-500 [--tglbg:yellow] hover:bg-blue-700"/>
                 <p>EN</p>
             </div>
