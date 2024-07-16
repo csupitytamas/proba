@@ -2,7 +2,7 @@
 
 namespace App\Controller\Authenticaton;
 
-use App\database\Mysql;
+use App\Database\Mysql;
 
 class RegisterController
 {

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Entities;
 
-use App\database\Mysql;
+use App\Database\Mysql;
 use Exception;
 
 class User
