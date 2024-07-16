@@ -10,6 +10,9 @@ use App\Controller\Maps\Storage;
 use App\Helpers\Request;
 
 try {
+    if (!file_exists('app/Database/Credentials.php')) {
+        throw new RuntimeException('Credentials file not found');
+    }
     $urlArray = explode( "/", trim( str_replace( '%7C', '|', $_SERVER['REQUEST_URI'] ), "/" ) );
     $parameters = new StdClass();
     if ($urlArray[0] ?? false) {
@@ -204,7 +207,6 @@ try {
                 }
                 exit;
             case 'auth':
-                //samorin.test/auth/login-page
                 if ($urlArray[1] ?? false) {
                     $user = new User($_POST);
                     switch ($urlArray[1]) {
@@ -245,6 +247,9 @@ try {
     }
     include('app/View/layout.html');
     include ('app/View/home.html');
+} catch (RuntimeException $exception) {
+    header('HTTP/1.1 400 Bad Request');
+    die($exception->getMessage());
 } catch (Exception $exception) {
     header('Content-Type: application/json');
     echo json_encode([
