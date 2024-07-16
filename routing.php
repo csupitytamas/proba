@@ -204,6 +204,7 @@ try {
                 }
                 exit;
             case 'auth':
+                //samorin.test/auth/login-page
                 if ($urlArray[1] ?? false) {
                     $user = new User($_POST);
                     switch ($urlArray[1]) {

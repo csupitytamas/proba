@@ -8,10 +8,10 @@ use mysqli_result;
 
 class Mysql
 {
-    public const serverName = "mysql";
+    public const serverName = "localhost";
     public const username = "root";
-    public const password = "root";
-    public const databaseName = "samorin";
+    public const password = "";
+    public const databaseName = "test";
 
     private mysqli $mysqli;
 

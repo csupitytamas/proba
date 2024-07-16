@@ -1,6 +1,6 @@
-CREATE DATABASE myDB;
+--CREATE DATABASE myDB;
 
-USE myDB;
+--USE myDB;
 
 CREATE TABLE kitoro (
 	id BIGINT AUTO_INCREMENT UNIQUE,
@@ -38,10 +38,10 @@ CREATE TABLE palyan (
 );
 
 INSERT INTO palyak (id, neve)
-VALUES  (1,"storage"),
-        (2,"main"),
-        (3,"respect"),
-        (4,"farriers");
+VALUES  (1,'storage'),
+        (2,'main'),
+        (3,'respect'),
+        (4,'farriers');
 
 INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
 VALUES  (1, null, 2, 4, null),
