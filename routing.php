@@ -2,11 +2,11 @@
 
 use App\Controller\Entities\Kitoro;
 use App\Controller\Entities\Rudak;
+use App\Controller\Entities\User;
 use App\Controller\Maps\Farriers;
 use App\Controller\Maps\Main;
 use App\Controller\Maps\Respect;
 use App\Controller\Maps\Storage;
-use App\Controller\User;
 use App\Helpers\Request;
 
 try {
