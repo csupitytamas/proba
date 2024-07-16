@@ -38,7 +38,7 @@ CREATE TABLE palyan (
 );
 
 INSERT INTO palyak (id, neve)
-VALUES  (1,"stroge"),
+VALUES  (1,"storage"),
         (2,"main"),
         (3,"respect"),
         (4,"farriers");
