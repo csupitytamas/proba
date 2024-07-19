@@ -9,18 +9,23 @@ new Vue({
         notification: {
             show: false,
             message: ''
-        }
+        },
+        showPassword:false
     },
     mounted() {
         this.$data.cookie = this.getCookie();
     },
     methods: {
+        changePassword: function () {
+            this.data.showPassword = !this.data.showPassword;
+        },
         registration: function () {
             let response = this.getRequest('/auth/registration')
             if (response.data.status == 'success') {
                 window.location = '/';
             }
-        },
+        }
+    },
         getRequest: async function (url) {
             try {
                 return await axios.get(url)
@@ -33,7 +38,7 @@ new Vue({
         getCookie: function () {
             let cookieArr = document.cookie.split("; ");
 
-            for(let i = 0; i < cookieArr.length; i++) {
+            for (let i = 0; i < cookieArr.length; i++) {
                 let cookiePair = cookieArr[i].split("=");
 
                 if ('lang' === cookiePair[0]) {
@@ -42,6 +47,6 @@ new Vue({
             }
 
             return null;
-        }
-    }
+        },
+
 });

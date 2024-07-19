@@ -1,0 +1,63 @@
+<body>
+<div id="app">
+    <header class="flex flex-row px-3 mb-2 text-white justify-between items-center bg-[#5ab4cd]">
+        <h1 class="mx-2 ml-4 text-3xl">Admin</h1>
+        <div class="flex flex-row float-right px-3 mb-2 text-white justify-between items-center bg-[#5ab4cd]">
+            <a class="w-2/5 p-1 my-2 bg-[#5ab4cd] text-center text-black text-lg border-2 border-black rounded-lg cursor-pointer hover:bg-[#75a0aa]" type="button">New Item</a>
+            <a class="w-2/5 p-1 my-2 bg-[#5ab4cd] text-center text-black text-lg border-2 border-black rounded-lg cursor-pointer hover:bg-[#75a0aa]" type="button">Edit Item</a>
+        </div>
+    </header>
+    <div class="flex flex-col justify-center items-center max-w-screen lg:w-2/5 mx-2 lg:mx-auto my-auto px-2 py-8 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
+        <p class="mb-2 justify-center items-center text-2xl">New Item</p>
+        <form>
+            <div  class="flex flex-row justify-center items-center mb-2" >
+             <p class="mr-2">Wings</p>
+                <input type="radio" value="wings" v-model="selectedOption" name="radio-7" class="radio radio-info mr-3 mb-1" checked="checked" />
+                <p>or</p>
+                <input type="radio" value="poles" v-model="selectedOption" name="radio-7" class="radio radio-info ml-3" />
+             <p class="ml-2">Poles</p>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <input type="text" placeholder="In English" class="input input-bordered text-lg w-3/4 w" >
+                <input type="text" placeholder="Magyarul" class="input input-bordered text-lg w-3/4" />
+                <input type="number" placeholder="Number of item" class="input input-bordered w-3/5 text-center text-lg" />
+                <div  class="w-3/5 max-w-xs text-lg text-center text-lg">
+                    <select v-if="selectedOption === poles" class="select select-bordered ">
+                        <option disabled selected>Set the lenght</option>
+                        <option value="3.5">3,5</option>
+                        <option value="3">3</option>
+                        <option value="2.5">2,5</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <input type="file" class="file-input file-input-bordered max-w-xs mt-4" />
+            </div>
+            <button class="button-ok rounded-xl" type="submit">ADD</button>
+        </form>
+    </div>
+    <div class="flex flex-col justify-center items-center max-w-screen lg:w-2/5 mx-2 lg:mx-auto my-auto px-2 py-8 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
+        <p class="mb-2 justify-center items-center text-2xl">Edit Item</p>
+        <form>
+            <div class="items-center justify-center ml-24 lg:ml-12">
+            <input class="bg-white mt-1 rounded-xl text-black text-lg" type="text" placeholder="Search.." name="search">
+            <button class="mx-2 my-2 " type="submit"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <input type="text" placeholder="In English" class="input input-bordered text-lg w-3/4 w" >
+                <input type="text" placeholder="Magyarul" class="input input-bordered text-lg w-3/4" />
+                <input type="number" placeholder="Number of item" class="input input-bordered w-3/5 text-center text-lg" />
+                <select v-if="selectedOption === 'rudak'" class="select select-bordered w-3/5 max-w-xs text-lg text-center">
+                    <option disabled selected>Set the lenght</option>
+                    <option value="3.5">3,5</option>
+                    <option value="3">3</option>
+                    <option value="2.5">2,5</option>
+                    <option value="2">2</option>
+                </select>
+                <input type="file" class="file-input file-input-bordered max-w-xs mt-4" />
+            </div>
+            <button class="button-ok rounded-xl" type="submit">Change</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
