@@ -10,7 +10,7 @@ class Storage extends AbstractMaps
 {
     use Response;
 
-    public const FIELD_NAME = 'raktar';
+    public const FIELD_NAME = 'storage';
     public Mysql $mysql;
     public object $parameters;
     private int $fieldId;

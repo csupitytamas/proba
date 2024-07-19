@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database;
+namespace app\Database;
 
 use Exception;
 use mysqli;
@@ -8,11 +8,6 @@ use mysqli_result;
 
 class Mysql
 {
-    public const serverName = "mysql";
-    public const username = "root";
-    public const password = "root";
-    public const databaseName = "samorin";
-
     private mysqli $mysqli;
 
     /**
@@ -20,7 +15,10 @@ class Mysql
      */
     public function __construct()
     {
-        $this->mysqli = new mysqli(self::serverName, self::username, self::password, self::databaseName);
+        require_once ('Credentials.php');
+        $databaseCredentials = getDatabaseCredentials();
+        $this->checkConnectionCredentials($databaseCredentials);
+        $this->mysqli = new mysqli($databaseCredentials->host, $databaseCredentials->user, $databaseCredentials->password, $databaseCredentials->database);
         $this->mysqli->set_charset("utf8");
 
         if ($this->mysqli->connect_error) {
@@ -131,5 +129,28 @@ class Mysql
             throw new Exception("Hiba az insert során.");
         }
         return $result;
+    }
+
+    /**
+     * Check the validity of connection credentials.
+     *
+     * @param object $credentials The connection credentials.
+     *
+     * @throws Exception When any of the connection credentials is null or empty.
+     */
+    private function checkConnectionCredentials(object $credentials): void
+    {
+        if (!isset($credentials->host) || empty($credentials->host)) {
+            throw new Exception('Host is null or empty');
+        }
+        if (!isset($credentials->database) || empty($credentials->database)) {
+            throw new Exception('Database name is null or empty');
+        }
+        if (!isset($credentials->user) || empty($credentials->user)) {
+            throw new Exception('User name is null or empty');
+        }
+        if (!isset($credentials->password) || empty($credentials->password)) {
+            throw new Exception('Password is null or empty');
+        }
     }
 }

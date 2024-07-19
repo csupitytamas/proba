@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Entities;
 
-use App\database\Mysql;
+use App\Database\Mysql;
 use Exception;
 
 class User
@@ -100,5 +100,13 @@ class User
     public static function hashPassword($password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public static function loggedIn(): bool
+    {
+        if (isset($_SESSION['user_id'])) {
+            return true;
+        }
+        return false;
     }
 }

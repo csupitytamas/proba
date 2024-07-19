@@ -3,7 +3,7 @@
 namespace App\Controller\Maps;
 
 use App\Controller\Traits\Response;
-use App\database\Mysql;
+use App\Database\Mysql;
 use Exception;
 use stdClass;
 class Respect extends AbstractMaps
@@ -54,7 +54,6 @@ class Respect extends AbstractMaps
         $response = new StdClass();
         $response->wings = $this->getWingsOnField();
         $response->poles = $this->getPolesOnField();
-
         return $this->jsonResponse($response);
     }
 

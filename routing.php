@@ -2,14 +2,17 @@
 
 use App\Controller\Entities\Kitoro;
 use App\Controller\Entities\Rudak;
+use App\Controller\Entities\User;
 use App\Controller\Maps\Farriers;
 use App\Controller\Maps\Main;
 use App\Controller\Maps\Respect;
 use App\Controller\Maps\Storage;
-use App\Controller\User;
 use App\Helpers\Request;
 
 try {
+    if (!file_exists('app/Database/Credentials.php')) {
+        throw new RuntimeException('Credentials file not found');
+    }
     $urlArray = explode( "/", trim( str_replace( '%7C', '|', $_SERVER['REQUEST_URI'] ), "/" ) );
     $parameters = new StdClass();
     if ($urlArray[0] ?? false) {
@@ -36,10 +39,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/main.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/main.html');
                 exit;
             case 'respect':
@@ -63,10 +68,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/respect.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/respect.html');
                 exit;
             case 'farriers':
@@ -90,10 +97,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/farriers.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/farriers.html');
                 exit;
             case 'storage':
@@ -117,10 +126,12 @@ try {
                             echo $view->deletePolesFromField();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/storage.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include('app/View/storage.html');
                 exit;
             case 'poles':
@@ -203,12 +214,14 @@ try {
                             echo $user->login();
                             exit;
                         case 'login-page':
+                            include('app/View/layout.html');
                             include ('app/View/login.html');
                             exit;
                         case 'registration':
                             echo $user->registration();
                             exit;
                         case 'registration-page':
+                            include('app/View/layout.html');
                             include ('app/View/registration.html');
                             exit;
                         case 'get-roles':
@@ -218,18 +231,25 @@ try {
                             echo $user->getPermissions();
                             exit;
                         default:
+                            include('app/View/layout.html');
                             include ('app/View/home.html');
                             exit;
                     }
                 }
+                include('app/View/layout.html');
                 include ('app/View/home.html');
                 exit;
             default:
+                include('app/View/layout.html');
                 include ('app/View/home.html');
                 exit;
         }
     }
+    include('app/View/layout.html');
     include ('app/View/home.html');
+} catch (RuntimeException $exception) {
+    header('HTTP/1.1 400 Bad Request');
+    die($exception->getMessage());
 } catch (Exception $exception) {
     header('Content-Type: application/json');
     echo json_encode([

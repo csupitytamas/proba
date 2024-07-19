@@ -1,29 +1,39 @@
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/login.css">
-    <title>Register</title>
-</head>
 <body>
-<script src="../../js/registration.js"></script>
-<form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-    <h2>Register</h2><br>
+<div id="app" class="flex flex-col space-y-8">
+    <header class="flex flex-row h-24 px-3 text-white justify-center items-center bg-[#5ab4cd]">
+        <h1 class="mb-2 text-center">Register</h1>
+    </header>
+    <div class="flex flex-col justify-center items-center max-w-screen lg:w-2/5 mx-2 lg:mx-auto my-auto px-2 py-8 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
+        <label class="mb-2 px-2 text-black">Username</label>
+        <input v-model="this.$data.form.username" class="w-full p-2 mb-2 text-base border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="text" name="username">
 
+        <label class="mb-2 px-2 text-black">Password</label>
+        <ul>
+            <li v-show="cookie == 'hu'">legalább 8 karakter kell legyen</li>
+            <li v-show="cookie == 'en'">2</li>
+            <li v-show="cookie == 'hu'">tartalmazzon nagy betűt</li>
+            <li v-show="cookie == 'en'">t2</li>
+            <li v-show="cookie == 'hu'">tartalmazzon számot</li>
+            <li v-show="cookie == 'en'">2</li>
+            <li v-show="cookie == 'hu'">tartalmazzon speciális karaktert pl: (.,*&)</li>
+            <li v-show="cookie == 'en'">2</li>
+        </ul>
+        <div class="flex flex-row w-full">
+            <input v-model="this.$data.form.password" class="w-full p-2 mb-2 text-base border border-bg-[#e4e4e4] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="password" name="password">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+        </div>
 
-    <label>Username</label>
-    <input type="text" name="username">
+        <button  @click="registration" class="w-2/5 p-4 mt-4 mb-4 bg-[#5ab4cd] text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]">Sign Up</button>
 
-    <label>Password</label>
-    <input type="text" name="password">
+        <p v-show="notification.show">{{ this.$data.notification.message }}</p>
 
-    <button type="submit" name="submit">Sign Up</button>
-
-    <p v-show="this.$data.notification.show">{{ this.$data.notification.message }}</p>
-
-    <h3>(Back to the Login)</h3>
-    <a href="/auth/login-page"><button type="button">Login</button></a>
-</form>
+        <h3 class="text-black" >(Back to the Login)</h3>
+        <a href="/auth/login-page" class="w-2/5 p-4 mt-4 bg-[#5ab4cd] text-center text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]">Login</a>
+    </div>
+</div>
 </body>
+<script src="../../js/registration.js"></script>
 </html>

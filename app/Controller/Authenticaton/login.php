@@ -32,7 +32,7 @@ require("LoginUser.php") ?>
     <p class="success"><?php echo @$user->success ?></p>
 
     <h3> (If you are not registered)</h3>
-    <button onclick="window.location.href = 'register.php';" type="button">Sign Up</button>
+    <a href="/auth/registration-page" type="button">Sign Up</a>
 </form>
 </body>
 </html>

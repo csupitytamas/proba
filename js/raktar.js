@@ -1,6 +1,7 @@
 new Vue({
     el: '#app',
     data: {
+        cookie: null,
         showLabel: false,
         showForm: false,
         selectedOption: '',
@@ -19,6 +20,10 @@ new Vue({
         inputValue: '',
         selectedLength: ''
     },
+    mounted() {
+        this.$data.cookie = this.getCookie();
+        this.getData();
+    },
     methods: {
         getData: async function () {
             let url = '/storage/on-field';
@@ -26,6 +31,22 @@ new Vue({
             console.log(response.data)
             this.$data.poles = response.data.poles
             this.$data.wings = response.data.wings
+        },switchLanguage: async function () {
+            let url = '/switch-lang?lang=' + this.$data.selectedLang;
+            let response = await this.getRequest(url)
+        },
+        getCookie: function () {
+            let cookieArr = document.cookie.split("; ");
+
+            for(let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+
+                if ('lang' === cookiePair[0]) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+
+            return null;
         },
         getRequest: async function (url) {
             try {
