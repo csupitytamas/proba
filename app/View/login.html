@@ -1,26 +1,42 @@
 <body>
-    <div id="app" class="flex flex-col space-y-8">
-        <header class="flex flex-row h-24 px-3 text-white justify-center items-center bg-[#5ab4cd]">
-            <h1 class="mb-2 text-center text-3xl">Login</h1>
-        </header>
-        <div class="flex flex-col justify-center items-center max-w-screen lg:w-2/5 mx-2 lg:mx-auto my-auto px-2 py-8 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
-            <label class="mb-2 px-2 text-black text-lg">Username</label>
-            <input class="w-3/4 p-2 mb-2 text-base border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="text" name="username">
+    <div id="app" class="container mx-auto min-h-screen justify-center content-center bg-white">
+        <div class="flex flex-row w-2/5 mx-4 mx-auto items-center bg-white justify-center py-5">
+            <h1 class="text-4xl font-bold">LOG IN</h1>
+        </div>
+        <div class="flex flex-col w-2/5 mx-4 mx-auto items-center px-2 p-4 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
+            <label class="mb-2 px-2 font-semibold">Username</label>
+            <input class="w-3/5 p-4 mb-2 bg-white text-base text-black border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="text" name="username">
+            <div class="flex flex-row justify-center content-center">
+                <label class=" flex flex-row gap-2 font-semibold items-center">
+                    Password
+                    <div class="group flex relative">
+                    <span class="px-2 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                        </svg>
+                    </span>
+                        <span class="absolute group-hover:opacity-100 transition-opacity bg-white px-1 text-sm text-black-500 font-light border rounded-md opacity-0 mx-10 w-max">
+                            <p>Password must include:</p>
+                            <ul>
+                                <li>8 characters</li>
+                                <li>2 uppercase</li>
+                                <li>2 numbers</li>
+                                <li>1 special character</li>
+                            </ul>
+                        </span>
+                    </div>
+                </label>
 
-            <label class="mb-2 px-2">Password</label>
-            <div class="flex flex-row justify-center items-center w-full ">
-                <input v-model="this.$data.form.password" class="w-3/5 p-2 mb-2 items-center text-base border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" id="password" type="password" name="password">
-                <a @click="changePassword" :type="this.$data.showPassword ? 'password' : 'text'"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2 mb-2" @click="togglePasswordVisibility">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg></a>
             </div>
+            <input class="w-3/5 p-2 mb-2 bg-white text-base text-black border border-bg-[#e4e4e4] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="text" name="password">
 
-            <button class="w-2/5 p-4 mt-4 bg-[#5ab4cd] text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]" type="submit" name="submit">Login</button>
+            <button class="w-3/5 p-4 mt-4 bg-[#5ab4cd] text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]" type="submit" name="submit">Login</button>
 
-            <h3 class="text-center font-light mt-4"> (If you are not registered)</h3>
-            <a href="/auth/registration-page" class="w-2/5 p-4 mt-4 bg-[#5ab4cd] text-center text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]" type="button">Sign Up</a>
-            <a href="/"  class="w-1/5 p-1 mt-4 bg-[#5ab4cd] text-center text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]" type="button">Back</a>
+            <h3 class=" flex flex-row text-center p-4 gap-2">
+                <a class="text-lg">If you are not registered,</a>
+                <a class="text-lg font-semibold text-[#5ab4cd]" href="/auth/registration-page" type="button">Sign Up</a>
+            </h3>
+            <a href="/" type="button">Back to Home</a>
         </div>
     </div>
 </body>
