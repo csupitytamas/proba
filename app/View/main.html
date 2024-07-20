@@ -15,7 +15,7 @@
     </header>
     <div class="container mx-auto mt-24 space-y-8">
         <div class="flex flex-row text-center justify-center">
-            <table class="w-full mx-4 my-3 wings-table">
+            <table id="wings-table" class="w-full mx-4 my-3">
                 <thead class="bg-[#87baca] border border-2 border-black">
                 <tr>
                     <th class="font-bold"
@@ -39,7 +39,7 @@
             </table>
         </div>
         <div class="flex flex-row text-center justify-center">
-            <table class="w-full mx-4 my-3 wings-table">
+            <table id="poles-table" class="w-full mx-4 my-3">
                 <thead class="bg-[#87baca] border border-2 border-black">
                 <tr>
                     <th colspan="5"
@@ -119,8 +119,8 @@
             <button class="button-ok rounded-xl">ADD</button>
         </div>
         <div class="flex flex-row">
-            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-lg text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
-               @click="deleteSelectedRow">DELETE</a>
+            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-2xl text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
+               @click="deleteSelectedRows">DELETE</a>
         </div>
     </div>
 </div>

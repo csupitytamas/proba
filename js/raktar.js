@@ -31,9 +31,6 @@ new Vue({
             console.log(response.data)
             this.$data.poles = response.data.poles
             this.$data.wings = response.data.wings
-        },switchLanguage: async function () {
-            let url = '/switch-lang?lang=' + this.$data.selectedLang;
-            let response = await this.getRequest(url)
         },
         getCookie: function () {
             let cookieArr = document.cookie.split("; ");

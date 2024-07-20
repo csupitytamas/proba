@@ -40,6 +40,10 @@ new Vue({
         wingsOnField: [],
         availableWings: [],
         availablePoles: [],
+        removeFromField: {
+            wings: [],
+            poles: [],
+        },
     },
     mounted() {
         this.$data.cookie = this.getCookie();
@@ -123,27 +127,43 @@ new Vue({
             };
         },
         selectRow(event) {
-            if (this.selectedRow) {
-                this.selectedRow.classList.remove('selected');
+            if (event.currentTarget) {
+                event.currentTarget.classList.remove('selected');
             }
-            this.selectedRow = event.currentTarget;
-            this.selectedRow.classList.add('selected');
+            event.currentTarget.classList.add('selected');
         },
         deleteRow(event) {
             event.stopPropagation();
             const row = event.target.closest('tr');
             row.remove();
         },
-        deleteSelectedRow() {
-            if (this.selectedRow) {
-                if (confirm('Delete?')) {
-                    this.selectedRow.remove();
-                    this.selectedRow = null;
+        deleteSelectedRows: async function () {
+            let wingsTable = document.getElementById('wings-table').childNodes('td')
+            let polesTable = document.getElementById('poles-table').childNodes('td')
+            Object.entries(wingsTable).forEach((value, key) => {
+                if (key.hasClass('selected')) {
+                    this.$data.removeFromField.wings.push(value)
                 }
-            } else {
-                alert('Select to delete.');
+            })
+            Object.entries(polesTable).forEach((value, key) => {
+                if (key.hasClass('selected')) {
+                    this.$data.removeFromField.poles.push(value)
+                }
+            })
+            if (!this.$data.removeFromField.wings.empty()) {
+                let url = '/main/delete-wing'
+                let response = await postRequest(url, this.$data.removeFromField.wings)
+                if (response.data.type == 'success') {
+                    this.$data.wingsOnField = response.data.data
+                }
             }
-
+            if (!this.$data.removeFromField.wings.empty()) {
+                let url = '/main/delete-poles'
+                let response = await postRequest(url, this.$data.removeFromField.poles)
+                if (response.data.type == 'success') {
+                    this.$data.polesOnField = response.data.data
+                }
+            }
         },
         moveToWarehouse() {
             if (this.selectedRow) {
