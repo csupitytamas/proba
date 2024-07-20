@@ -1,10 +1,11 @@
 new Vue({
     el: '#app',
     data: {
-        cookie: null,
-        form: {
-            username: "",
-            password: ""
+        cookie: 'en',
+        loginData: {
+            username: null,
+            password: null,
+            errors: []
         },
         notification: {
             show: false,
@@ -13,39 +14,43 @@ new Vue({
         showPassword:false
     },
     mounted() {
-        this.$data.cookie = this.getCookie();
+        this.$data.cookie = this.getCookie('lang');
     },
-    methods:{
-       login: function () {
-            let response = this.getRequest('/auth/login')
-            if (response.data.status == 'success') {
-                window.location = '/';
+    methods: {
+        sendLogin: async function () {
+            let url = '/auth/login'
+            let formData = new FormData();
+            if (this.$data.loginData.username == null || typeof this.$data.loginData.username == 'undefined') {
+                this.$data.loginData.errors = 'Please '
             }
-        }
-    },
-    changePassword: function () {
-        this.data.showPassword = !this.data.showPassword;
-    },
-    getRequest: async function (url) {
-        try {
-            return await axios.get(url)
-        } catch (error) {
-            console.log(error)
-            this.$data.notification.show = true;
-            this.$data.notification.message = error.data.message
-        }
-    },
-    getCookie: function () {
-        let cookieArr = document.cookie.split("; ");
+            formData.append('username', this.$data.loginData.username)
+            formData.append('password', this.$data.loginData.password)
 
-        for (let i = 0; i < cookieArr.length; i++) {
-            let cookiePair = cookieArr[i].split("=");
-
-            if ('lang' === cookiePair[0]) {
-                return decodeURIComponent(cookiePair[1]);
+            let response = await this.postRequest(url)
+            console.log(response.data)
+        },
+        postRequest: async function (url, data) {
+            try {
+                return await axios.post(url, data)
+            } catch (error) {
+                console.log(error)
             }
-        }
+        },
+        changePassword: function () {
+            this.data.showPassword = !this.data.showPassword;
+        },
+        getCookie: function (cvalue) {
+            let cookieArr = document.cookie.split("; ");
 
-        return null;
+            for(let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+
+                if (cvalue === cookiePair[0]) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+
+            return null;
+        }
     },
 });
