@@ -3,7 +3,15 @@ new Vue({
     data: {
         cookie: null,
         showLabel: false,
-        showForm: false,
+        form: {
+            show: false,
+            wingForm: {
+                show: false
+            },
+            poleForm: {
+                show: false
+            }
+        },
         selectedOption: '',
         newRow: {
             name: '',
@@ -14,20 +22,48 @@ new Vue({
         searchableParameters: {
             length: null,
         },
-        poles: [],
-        wings: [],
+        addToField: {
+            pole: {
+                type: null,
+                counter: null,
+                min: 1,
+                max: 0,
+            },
+            wing: {
+                type: null,
+                counter: null,
+                min: 2,
+                max: 0
+            }
+        },
+        polesOnField: [],
+        wingsOnField: [],
+        availableWings: [],
+        availablePoles: [],
     },
     mounted() {
         this.$data.cookie = this.getCookie();
         this.getData();
+        this.getAvailableWings();
+        this.getAvailablePoles();
     },
     methods: {
         getData: async function () {
             let url = '/main/on-field';
             let response = await this.getRequest(url)
             console.log(response.data)
-            this.$data.poles = response.data.poles
-            this.$data.wings = response.data.wings
+            this.$data.polesOnField = response.data.poles
+            this.$data.wingsOnField = response.data.wings
+        },
+        getAvailableWings: async function () {
+            let url = '/wings/get-wings';
+            let response = await this.getRequest(url);
+            this.$data.availableWings = response.data
+        },
+        getAvailablePoles: async function () {
+            let url = '/poles/get-poles';
+            let response = await this.getRequest(url);
+            this.$data.availablePoles = response.data
         },
         switchLanguage: async function () {
             let url = '/switch-lang?lang=' + this.$data.selectedLang;
@@ -54,7 +90,15 @@ new Vue({
             }
         },
         toggleForm() {
-            this.showForm = this.selectedOption === 'kitoro' || this.selectedOption === 'rudak';
+            this.form.show = true;
+            if (this.selectedOption === 'wing') {
+                this.form.poleForm.show = false;
+                this.form.wingForm.show = true;
+            }
+            if (this.selectedOption === 'role') {
+                this.form.wingForm.show = false;
+                this.form.poleForm.show = true;
+            }
         },
         addRow() {
             let table;
@@ -122,6 +166,28 @@ new Vue({
                 param ="?hossz="
                 if (this.data.searchableParameters.length !== null)
                     window.location = url + param + this.data.searchableParameters.length;
+            }
+        },
+        setWingMaxPieces: function (pieces) {
+            this.addToField.wing.max = parseInt(pieces)
+        },
+        setPoleMaxPieces: function (pieces) {
+            this.addToField.pole.max = parseInt(pieces)
+        },
+        checkWingMaxPieces: function () {
+            if (this.addToField.wing.counter > this.addToField.wing.max) {
+                this.addToField.wing.counter = this.addToField.wing.max;
+            }
+            if (this.addToField.wing.counter <= 0) {
+                this.addToField.wing.counter = this.addToField.wing.min;
+            }
+        },
+        checkPoleMaxPieces: function () {
+            if (this.addToField.pole.counter > this.addToField.pole.max) {
+                this.addToField.pole.counter = this.addToField.pole.max;
+            }
+            if (this.addToField.pole.counter <= 0) {
+                this.addToField.pole.counter = this.addToField.pole.min;
             }
         }
     }
