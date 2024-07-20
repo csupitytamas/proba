@@ -1,7 +1,17 @@
 --CREATE DATABASE myDB;
 
---USE myDB;
+--USE test;
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT UNIQUE,
+    username VARCHAR(255),
+    password CHAR(255)
+);
+CREATE TABLE permissions (
 
+);
+CREATE TABLE roles(
+
+);
 CREATE TABLE kitoro (
 	id BIGINT AUTO_INCREMENT UNIQUE,
     name_en VARCHAR(255),

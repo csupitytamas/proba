@@ -1,7 +1,7 @@
 <body>
 <div id="app">
     <header class="flex flex-row px-3 text-white justify-between items-center bg-[#5ab4cd]">
-        <h1>FARRIERS ARENA</h1>
+        <h1 class=" ml-4 text-3xl">FARRIERS ARENA</h1>
         <div class="float-right py-0.5">
             <form class="search" action="">
                 <input class="bg-white rounded-xl text-black" type="text" placeholder="Search.." name="search">
@@ -13,49 +13,49 @@
         <div class="flex flex-row text-center justify-center">
             <table class="w-full mx-4 my-3 wings-table">
                 <thead class="bg-[#87baca] border border-2 border-black">
-            <tr>
-                <th class="font-bold" colspan="4">WINGS</th>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <th>Number of Items</th>
-                <th>Picture</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="wings in this.$data.wings" @click="selectRow($event)">
-                <td v-show="cookie == 'hu'">{{ wings.name_hu }}</td>
-                <td v-show="cookie == 'en'">{{ wings.name_en }}</td>
-                <td>{{ wings.db }}</td>
-                <td class="max-w-sm h-auto">{{ wings.kep }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                <tr>
+                    <th class="font-bold" colspan="4">WINGS</th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Number of Items</th>
+                    <th>Picture</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="wings in this.$data.wings" @click="selectRow($event)">
+                    <td v-show="cookie == 'hu'">{{ wings.name_hu }}</td>
+                    <td v-show="cookie == 'en'">{{ wings.name_en }}</td>
+                    <td>{{ wings.db }}</td>
+                    <td class="max-w-sm h-auto">{{ wings.kep }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="flex flex-row text-center justify-center">
             <table class="w-full mx-4 my-3 wings-table">
                 <thead class="bg-[#87baca] border border-2 border-black">
-            <tr>
-                <th colspan="5" style="font-weight: bold">POLES</th>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <th>Number of Items</th>
-                <th>Length</th>
-                <th>Picture</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="pole in this.$data.poles" @click="selectRow($event)">
-                <td v-show="cookie == 'hu'">{{ pole.name_hu }}</td>
-                <td v-show="cookie == 'en'">{{ pole.name_en }}</td>
-                <td>{{ pole.db }}</td>
-                <td>{{ pole.hossz }}</td>
-                <td class="max-w-sm h-auto">{{ pole.kep }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                <tr>
+                    <th colspan="5" style="font-weight: bold">POLES</th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Number of Items</th>
+                    <th>Length</th>
+                    <th>Picture</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="pole in this.$data.poles" @click="selectRow($event)">
+                    <td v-show="cookie == 'hu'">{{ pole.name_hu }}</td>
+                    <td v-show="cookie == 'en'">{{ pole.name_en }}</td>
+                    <td>{{ pole.db }}</td>
+                    <td>{{ pole.hossz }}</td>
+                    <td class="max-w-sm h-auto">{{ pole.kep }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="flex flex-row justify-center">
             <select class="flex w-2/5 min-w-1 mx-1 my-auto p-0.5 justify-center text-base text-center text-black duration-300 cursor-pointer outline outline-2 outline-bg-[#a8dbea] bg-white rounded hover:text=[#87baca] hover:min-w-2 hover:text-lg hover:items-center"
                     v-model="selectedOption"
@@ -69,8 +69,6 @@
             <form class="w-2/5 p-0.5 mx-0.5 my-auto  bg-[#ffffff] text-center text-base rounded-xl border border-2 border-bg-[#87baca]"
                   @submit.prevent="addRow"
                   method="POST">
-            <label style="text-align: center; font-size: larger; font-weight: bold" for="name">Name:</label> <br>
-            <input type="text" style="text-align: center; font-size: larger" id="name" v-model="newRow.name"> <br>
                 <label class="text-center text-lg font-bold" for="darabszam">Number:</label> <br>
                 <input class="w-2/5 bg-white text-lg text-center font-bold rounded"
                        type="number" id="darabszam"
@@ -93,15 +91,14 @@
                     </div>
                 </div>
                 <button class="button-ok rounded-xl" type="submit">ADD</button>
-        </form>
-    </div>
+            </form>
+        </div>
         <div class="flex flex-row">
-            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-2xl text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
+            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-lg text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
                @click="deleteSelectedRow">DELETE</a>
         </div>
     </div>
 </div>
 <script src="../../js/farriers.js"></script>
 </body>
-
 </html>

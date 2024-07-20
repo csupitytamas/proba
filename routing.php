@@ -134,6 +134,35 @@ try {
                 include('app/View/layout.html');
                 include('app/View/storage.html');
                 exit;
+            case 'admin':
+                if ($urlArray[1] ?? false) {
+                    Request::calculateUrlAndParameters($urlArray[1], $parameters);
+                    $view = new Storage($parameters);
+                    switch ($urlArray[1]) {
+                        case 'on-field':
+                            echo $view->getAllData();
+                            exit;
+                        case 'new-wings':
+                            echo $view->addWingsToField();
+                            exit;
+                        case 'new-poles':
+                            echo $view->addPolesToField();
+                            exit;
+                        case 'delete-wing':
+                            echo $view->deleteWingsFromField();
+                            exit;
+                        case 'delete-poles':
+                            echo $view->deletePolesFromField();
+                            exit;
+                        default:
+                            include('app/View/layout.html');
+                            include ('app/View/admin.html');
+                            exit;
+                    }
+                }
+                include('app/View/layout.html');
+                include('app/View/admin.html');
+                exit;
             case 'poles':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);

@@ -1,29 +1,31 @@
 <body>
 <div id="app" class="flex flex-col space-y-8">
     <header class="flex flex-row h-24 px-3 text-white justify-center items-center bg-[#5ab4cd]">
-        <h1 class="mb-2 text-center">Register</h1>
+        <h1 class="mb-2 text-center text-3xl">Register</h1>
     </header>
     <div class="flex flex-col justify-center items-center max-w-screen lg:w-2/5 mx-2 lg:mx-auto my-auto px-2 py-8 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
-        <label class="mb-2 px-2 text-black">Username</label>
-        <input v-model="this.$data.form.username" class="w-full p-2 mb-2 text-base border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="text" name="username">
+        <label class="mb-2 px-2 text-black text-lg">Username</label>
+        <label class="mb-2 px-2 text-black text-sm" v-show="cookie == 'hu'"> (A neved) </label>
+        <label class="mb-2 px-2 text-black text-sm" v-show="cookie == 'en'"> (Your name) </label>
+        <input v-model="this.$data.form.username" class="w-3/4 p-2 mb-2 text-base border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="text" name="username">
 
-        <label class="mb-2 px-2 text-black">Password</label>
-        <ul>
-            <li v-show="cookie == 'hu'">legalább 8 karakter kell legyen</li>
-            <li v-show="cookie == 'en'">2</li>
-            <li v-show="cookie == 'hu'">tartalmazzon nagy betűt</li>
-            <li v-show="cookie == 'en'">t2</li>
-            <li v-show="cookie == 'hu'">tartalmazzon számot</li>
-            <li v-show="cookie == 'en'">2</li>
-            <li v-show="cookie == 'hu'">tartalmazzon speciális karaktert pl: (.,*&)</li>
-            <li v-show="cookie == 'en'">2</li>
+        <label class="mb-2 px-2 text-black text-center text-lg">Password</label>
+        <ul class="text-sm mb-7 ml-14">
+            <li v-show="cookie == 'hu'">Legalább 8 karakter kell legyen</li>
+            <li v-show="cookie == 'en'">At least 8 characters </li>
+            <li v-show="cookie == 'hu'">Tartalmazzon nagy betűt (A,B,C..) </li>
+            <li v-show="cookie == 'en'">Contains capital letters (A,B,C..) </li>
+            <li v-show="cookie == 'hu'">Tartalmazzon számot (1,2,3..) </li>
+            <li v-show="cookie == 'en'">Contains numbers (1,2,3..)</li>
+            <li v-show="cookie == 'hu'">Tartalmazzon speciális karaktert pl: (.,*)</li>
+            <li v-show="cookie == 'en'">Contains special characters (.,*) </li>
         </ul>
-        <div class="flex flex-row w-full">
-            <input v-model="this.$data.form.password" class="w-full p-2 mb-2 text-base border border-bg-[#e4e4e4] rounded-lg focus:outline focus:border-bg-[#8c827e]" type="password" name="password">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <div class="flex flex-row justify-center items-center w-full ">
+            <input v-model="this.$data.form.password" class="w-3/5 p-2 mb-2 items-center text-base border border-bg-[#] rounded-lg focus:outline focus:border-bg-[#8c827e]" id="password" type="password" name="password">
+            <a @click="changePassword" :type="this.$data.showPassword ? 'password' : 'text'"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2 mb-2" @click="togglePasswordVisibility">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
+            </svg></a>
         </div>
 
         <button  @click="registration" class="w-2/5 p-4 mt-4 mb-4 bg-[#5ab4cd] text-white text-base rounded-lg cursor-pointer hover:bg-[#75a0aa]">Sign Up</button>

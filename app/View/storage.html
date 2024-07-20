@@ -1,52 +1,21 @@
 <body>
 <div id="app">
-    <header class="flex flex-row px-3 text-white justify-between items-center bg-[#5ab4cd]">
-        <h1>STORAGE</h1>
-        <div class="float-right py-0.5">
-            <div>
-                <div id class="search-container">
-                    <form class="search" action="">
-                        <input name="kereso" placeholder="Keresett tartalom">
-                        <input name="type" type="radio" value="wings">
-                        <input name="type" type="radio" value="poles">
-                        <input name="hossz" type="radio" value="2">
-                        <input name="hossz" type="radio" value="2.5">
-                        <input name="hossz" type="radio" value="3">
-                        <input name="hossz" type="radio" value="3.5">
-                        <input>
-                        <select id="select-search" v-model="selectedCategory">
-                            <option value="name">Name</option>
-                            <option value="number">Number</option>
-                            <option value="length">Length</option>
-                        </select>
-                        <input id="search_name" v-if="selectedCategory === 'name'" v-model="inputValue" type="text" placeholder="Search..." style="display: inline">
-                        <input id="search_number" v-else-if="selectedCategory === 'number'" v-model="inputValue" type="number" placeholder="Search..." style="display: none">
-                        <select id="search-length" v-else v-model="selectedLength" style="display: none; ">
-                            <option value="3">3 meter</option>
-                            <option value="3.5">3,5 meter</option>
-                            <option value="2.5">2,5 meter</option>
-                            <option value="2">2 meter</option>
-                        </select>
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-                <div id="header-img">
-                    <img class="img" src="/img/free-plus-icon-3107-thumb.png" alt="new-img">
-                    <a onclick="location.href='/'">
-                        <img class="img" src="/img/avfe23a6b11d1ff4752fd.png" alt="home_img">
-                    </a>
-                    <div class="move">
-                        <img id="move-img" src="/img/1200px-Move_icon.svg.png" alt="move-img">
-                        <select id="move-select" style="display: none;">
-                            <option disabled value="">MOVE THE ITEM TO:</option>
-                            <option value="main">MAIN</option>
-                            <option value="respect">RESPECT</option>
-                            <option value="farriers">FARRIERS</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <header class="flex flex-row px-6 text-white justify-between items-center bg-[#5ab4cd]">
+        <h1 class=" ml-4 text-3xl">STORAGE</h1>
+        <div class="float-right py-0.5 flex flex-row">
+                    <div class="flex flex-row float-right px-4 items-center space-x-1 ">
+                        <a href='/admin'>
+                            <img class="img" src="/img/free-plus-icon-3107-thumb.png" alt="new-img">
+                        </a>
+                        <a href='/' class="ml-17">
+                            <img class="img" src="/img/avfe23a6b11d1ff4752fd.png" alt="home_img">
+                        </a>
+                        <form class="search" action="">
+                            <input class="bg-white mt-1 rounded-xl text-black" type="text" placeholder="Search.." name="search">
+                            <button class="mx-2 my-2" type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                  </div>
+             </div>
     </header>
     <div class="container mx-auto mt-24 space-y-8">
         <div class="flex flex-row text-center justify-center">
