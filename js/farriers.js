@@ -3,7 +3,15 @@ new Vue({
     data: {
         cookie: null,
         showLabel: false,
-        showForm: false,
+        form: {
+            show: false,
+            wingForm: {
+                show: false
+            },
+            poleForm: {
+                show: false
+            }
+        },
         selectedOption: '',
         newRow: {
             name: '',
@@ -14,20 +22,52 @@ new Vue({
         searchableParameters: {
             length: null,
         },
-        poles: [],
-        wings: [],
+        addToField: {
+            pole: {
+                type: null,
+                counter: null,
+                min: 1,
+                max: 0,
+            },
+            wing: {
+                type: null,
+                counter: null,
+                min: 2,
+                max: 0
+            }
+        },
+        polesOnField: [],
+        wingsOnField: [],
+        availableWings: [],
+        availablePoles: [],
+        removeFromField: {
+            wings: [],
+            poles: [],
+        },
     },
     mounted() {
         this.$data.cookie = this.getCookie();
         this.getData();
+        this.getAvailableWings();
+        this.getAvailablePoles();
     },
     methods: {
         getData: async function () {
-            let url = '/farriers/on-field';
+            let url = '/main/on-field';
             let response = await this.getRequest(url)
             console.log(response.data)
-            this.$data.poles = response.data.poles
-            this.$data.wings = response.data.wings
+            this.$data.polesOnField = response.data.poles
+            this.$data.wingsOnField = response.data.wings
+        },
+        getAvailableWings: async function () {
+            let url = '/wings/get-wings';
+            let response = await this.getRequest(url);
+            this.$data.availableWings = response.data
+        },
+        getAvailablePoles: async function () {
+            let url = '/poles/get-poles';
+            let response = await this.getRequest(url);
+            this.$data.availablePoles = response.data
         },
         switchLanguage: async function () {
             let url = '/switch-lang?lang=' + this.$data.selectedLang;
@@ -54,7 +94,15 @@ new Vue({
             }
         },
         toggleForm() {
-            this.showForm = this.selectedOption === 'kitoro' || this.selectedOption === 'rudak';
+            this.form.show = true;
+            if (this.selectedOption === 'wing') {
+                this.form.poleForm.show = false;
+                this.form.wingForm.show = true;
+            }
+            if (this.selectedOption === 'role') {
+                this.form.wingForm.show = false;
+                this.form.poleForm.show = true;
+            }
         },
         addRow() {
             let table;
@@ -68,6 +116,8 @@ new Vue({
                 newRow.innerHTML = `<td>${this.newRow.name}</td><td>${this.newRow.number}</td><td>${this.newRow.length}</td><td><img src="img/kep1.jpg" alt="Példa kép" style="max-width: 200px; max-height: 200px;">`;
             }
             table.appendChild(newRow);
+
+
             this.showLabel = true;
 
             this.newRow = {
@@ -77,27 +127,43 @@ new Vue({
             };
         },
         selectRow(event) {
-            if (this.selectedRow) {
-                this.selectedRow.classList.remove('selected');
+            if (event.currentTarget) {
+                event.currentTarget.classList.remove('selected');
             }
-            this.selectedRow = event.currentTarget;
-            this.selectedRow.classList.add('selected');
+            event.currentTarget.classList.add('selected');
         },
         deleteRow(event) {
             event.stopPropagation();
             const row = event.target.closest('tr');
             row.remove();
         },
-        deleteSelectedRow() {
-            if (this.selectedRow) {
-                if (confirm('Delete?')) {
-                    this.selectedRow.remove();
-                    this.selectedRow = null;
+        deleteSelectedRows: async function () {
+            let wingsTable = document.getElementById('wings-table').childNodes('td')
+            let polesTable = document.getElementById('poles-table').childNodes('td')
+            Object.entries(wingsTable).forEach((value, key) => {
+                if (key.hasClass('selected')) {
+                    this.$data.removeFromField.wings.push(value)
                 }
-            } else {
-                alert('Select to delete.');
+            })
+            Object.entries(polesTable).forEach((value, key) => {
+                if (key.hasClass('selected')) {
+                    this.$data.removeFromField.poles.push(value)
+                }
+            })
+            if (!this.$data.removeFromField.wings.empty()) {
+                let url = '/main/delete-wing'
+                let response = await postRequest(url, this.$data.removeFromField.wings)
+                if (response.data.type == 'success') {
+                    this.$data.wingsOnField = response.data.data
+                }
             }
-
+            if (!this.$data.removeFromField.wings.empty()) {
+                let url = '/main/delete-poles'
+                let response = await postRequest(url, this.$data.removeFromField.poles)
+                if (response.data.type == 'success') {
+                    this.$data.polesOnField = response.data.data
+                }
+            }
         },
         moveToWarehouse() {
             if (this.selectedRow) {
@@ -110,8 +176,6 @@ new Vue({
             }
         },
         refresh: function () {
-            // TODO url-nek le kell kérned js-el az aktualis url-t es hozzafuzni a hossz parametert
-            // TODO JS-el ellenőrizni, hogy az url-ben található-e kérdőjel ha igen akkor "&hossz=" ha nem akkor pedig "?hossz="
             let url = window.location.href;
             if (url.includes('?')) {
                 param = "&hossz=";
@@ -122,6 +186,28 @@ new Vue({
                 param ="?hossz="
                 if (this.data.searchableParameters.length !== null)
                     window.location = url + param + this.data.searchableParameters.length;
+            }
+        },
+        setWingMaxPieces: function (pieces) {
+            this.addToField.wing.max = parseInt(pieces)
+        },
+        setPoleMaxPieces: function (pieces) {
+            this.addToField.pole.max = parseInt(pieces)
+        },
+        checkWingMaxPieces: function () {
+            if (this.addToField.wing.counter > this.addToField.wing.max) {
+                this.addToField.wing.counter = this.addToField.wing.max;
+            }
+            if (this.addToField.wing.counter <= 0) {
+                this.addToField.wing.counter = this.addToField.wing.min;
+            }
+        },
+        checkPoleMaxPieces: function () {
+            if (this.addToField.pole.counter > this.addToField.pole.max) {
+                this.addToField.pole.counter = this.addToField.pole.max;
+            }
+            if (this.addToField.pole.counter <= 0) {
+                this.addToField.pole.counter = this.addToField.pole.min;
             }
         }
     }
