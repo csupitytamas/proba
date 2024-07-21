@@ -1,20 +1,25 @@
 <body>
-<div id="app">
+<div id="app" class="bg-white">
     <header class="flex flex-row px-3 text-white justify-between items-center bg-[#5ab4cd]">
-        <h1 class=" ml-4 text-3xl">RESPECT ARENA</h1>
+        <h1 class=" ml-4 text-3xl">RESPECT ARENA </h1>
         <div class="float-right py-0.5">
             <form class="search" action="">
-                <input class="bg-white rounded-xl text-black" type="text" placeholder="Search.." name="search">
-                <button class="mx-2 my-2" type="submit"><i class="fa fa-search"></i></button>
+                <input class="bg-white rounded-xl text-black"
+                       type="text"
+                       placeholder="Search.."
+                       name="search">
+                <button class="mx-2 my-2"
+                        type="submit"><i class="fa fa-search"></i></button>
             </form>
         </div>
     </header>
     <div class="container mx-auto mt-24 space-y-8">
         <div class="flex flex-row text-center justify-center">
-            <table class="w-full mx-4 my-3 wings-table">
+            <table id="wings-table" class="w-full mx-4 my-3">
                 <thead class="bg-[#87baca] border border-2 border-black">
                 <tr>
-                    <th class="font-bold" colspan="4">WINGS</th>
+                    <th class="font-bold"
+                        colspan="4">WINGS</th>
                 </tr>
                 <tr>
                     <th>Name</th>
@@ -23,7 +28,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="wings in this.$data.wings" @click="selectRow($event)">
+                <tr v-for="wings in this.$data.wingsOnField"
+                    @click="selectRow($event)">
                     <td v-show="cookie == 'hu'">{{ wings.name_hu }}</td>
                     <td v-show="cookie == 'en'">{{ wings.name_en }}</td>
                     <td>{{ wings.db }}</td>
@@ -33,10 +39,11 @@
             </table>
         </div>
         <div class="flex flex-row text-center justify-center">
-            <table class="w-full mx-4 my-3 wings-table">
+            <table id="poles-table" class="w-full mx-4 my-3">
                 <thead class="bg-[#87baca] border border-2 border-black">
                 <tr>
-                    <th colspan="5" style="font-weight: bold">POLES</th>
+                    <th colspan="5"
+                        class="font-bold">POLES</th>
                 </tr>
                 <tr>
                     <th>Name</th>
@@ -46,7 +53,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="pole in this.$data.poles" @click="selectRow($event)">
+                <tr v-for="pole in this.$data.polesOnField"
+                    @click="selectRow($event)">
                     <td v-show="cookie == 'hu'">{{ pole.name_hu }}</td>
                     <td v-show="cookie == 'en'">{{ pole.name_en }}</td>
                     <td>{{ pole.db }}</td>
@@ -61,45 +69,61 @@
                     v-model="selectedOption"
                     @change="toggleForm">
                 <option disabled value="">SELECT TO ADD</option>
-                <option value="kitoro">WINGS</option>
-                <option value="rudak">POLES</option>
+                <option value="wing">WINGS</option>
+                <option value="role">POLES</option>
             </select>
         </div>
-        <div id="formContainer" v-show="showForm" class="flex flex-row justify-center bg-white">
-            <form class="w-2/5 p-0.5 mx-0.5 my-auto  bg-[#ffffff] text-center text-base rounded-xl border border-2 border-bg-[#87baca]"
-                  @submit.prevent="addRow"
-                  method="POST">
-                <label style="text-align: center; font-size: larger; font-weight: bold" for="name">Name:</label> <br>
-                <input type="text" style="text-align: center; font-size: larger" id="name" v-model="newRow.name"> <br>
-                <label style="text-align: center; font-size: larger; font-weight: bold" for="darabszam">Number:</label>
-                <br>
-                <input type="number" style="text-align: center ; font-size: larger;" id="darabszam"
-                       v-model="newRow.number" min="1"> <br>
-                <div v-if="selectedOption === 'rudak'"
-                     class="flex flex-col">
-                    <label class="text-center text-lg font-bold"
-                           for="length">Length:</label> <br>
-                    <div class="flex flex-row justify-center items-center space-x-2">
-                        <select id="length"
-                                class="bg-white px-2 py-3 text-center text-lg border border-2 rounded"
-                                v-model="newRow.length">
-                            <option value="3.5">3,5</option>
-                            <option value="3">3</option>
-                            <option value="2.5">2,5</option>
-                            <option value="2">2</option>
-                        </select>
-                        <p>meter</p> <br>
-                    </div>
-                </div>
-                <button class="button-ok rounded-xl" type="submit">ADD</button>
-            </form>
+        <div id="formContainer"
+             v-show="this.$data.form.show"
+             class="flex flex-col w-2/5 mx-auto justify-center bg-white rounded-xl border border-2 border-bg-[#87baca]">
+            <div v-show="this.$data.form.wingForm.show"
+                 class="flex flex-col w-full px-0.5 py-4 mx-auto my-auto space-y-4 text-center text-base">
+                <label class="text-center text-lg font-bold">Name:</label>
+                <select v-model="addToField.wing.type"
+                        class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl">
+                    <option disabled value="">SELECT WING</option>
+                    <option v-for="wing in this.$data.availableWings"
+                            :value="wing.id"
+                            @click="setWingMaxPieces(wing.db)">
+                        {{ cookie == 'hu' ? wing.name_hu : wing.name_en }} - max {{ wing.db }} pieces
+                    </option>
+                </select>
+                <label class="text-center text-lg font-bold">Number (minimum 2):</label>
+                <input class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
+                       type="number"
+                       v-model="addToField.wing.counter"
+                       @change="checkWingMaxPieces"
+                       :min="addToField.wing.min"
+                       :max="addToField.wing.max">
+            </div>
+            <div v-show="this.$data.form.poleForm.show"
+                 class="flex flex-col w-full px-0.5 py-4 mx-auto my-auto space-y-4 text-center text-base">
+                <label class="text-center text-lg font-bold">Name:</label><br>
+                <select v-model="addToField.pole.type"
+                        class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center text-wrap border border-2 border-bg-black rounded-xl">
+                    <option disabled selected value="">SELECT POLE</option>
+                    <option v-for="pole in this.$data.availablePoles"
+                            :value="pole.id"
+                            @click="setPoleMaxPieces(pole.db)">
+                        {{ cookie == 'hu' ? pole.name_hu : pole.name_en }} - {{ pole.hossz }} meter /  max {{ pole.db }} pieces
+                    </option>
+                </select>
+                <label class="text-center text-lg font-bold">Number (minimum 1):</label>
+                <input class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
+                       type="number"
+                       v-model="addToField.pole.counter"
+                       @change="checkPoleMaxPieces"
+                       :min="addToField.pole.min"
+                       :max="addToField.pole.max">
+            </div>
+            <button class="button-ok rounded-xl">ADD</button>
         </div>
         <div class="flex flex-row">
-            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-lg text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
-               @click="deleteSelectedRow">DELETE</a>
+            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-2xl text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
+               @click="deleteSelectedRows">DELETE</a>
         </div>
     </div>
 </div>
-<script src="/js/respect.js"></script>
+<script src="../../js/main.js"></script>
 </body>
 </html>
