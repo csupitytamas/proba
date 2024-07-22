@@ -55,7 +55,6 @@ new Vue({
         getData: async function () {
             let url = '/main/on-field';
             let response = await this.getRequest(url)
-            console.log(response.data)
             this.$data.polesOnField = response.data.poles
             this.$data.wingsOnField = response.data.wings
         },
@@ -68,6 +67,31 @@ new Vue({
             let url = '/poles/get-poles';
             let response = await this.getRequest(url);
             this.$data.availablePoles = response.data
+        },
+        getSelectedWings: function (remove = false) {
+            let wingsTable = document.getElementById('wings-table')
+            let selectedWingsCells = Array.from(wingsTable.querySelectorAll('.selected'));
+            selectedWingsCells.forEach((selectedChild) => {
+                if (remove) {
+                    selectedChild.classList.remove('selected')
+                }
+                else {
+                    this.$data.removeFromField.wings.push(selectedChild.getAttribute('value'))
+                }
+            });
+        },
+        getSelectedPoles: function (remove = false) {
+            let polesTable = document.getElementById('poles-table')
+            let selectedPolesCells = Array.from(polesTable.querySelectorAll('.selected'));
+
+            selectedPolesCells.forEach((selectedChild) => {
+                if (remove) {
+                    selectedChild.classList.remove('selected')
+                }
+                else {
+                    this.$data.removeFromField.poles.push(selectedChild.getAttribute('value'))
+                }
+            });
         },
         switchLanguage: async function () {
             let url = '/switch-lang?lang=' + this.$data.selectedLang;
@@ -89,6 +113,17 @@ new Vue({
         getRequest: async function (url) {
             try {
                 return await axios.get(url)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        postRequest: async function (url, data) {
+            try {
+                const options = {
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                };
+
+                return await axios.post(url, data, options)
             } catch (error) {
                 console.log(error)
             }
@@ -127,10 +162,11 @@ new Vue({
             };
         },
         selectRow(event) {
-            if (event.currentTarget) {
+            if (event.currentTarget.classList.contains('selected')) {
                 event.currentTarget.classList.remove('selected');
+            } else {
+                event.currentTarget.classList.add('selected');
             }
-            event.currentTarget.classList.add('selected');
         },
         deleteRow(event) {
             event.stopPropagation();
@@ -138,41 +174,50 @@ new Vue({
             row.remove();
         },
         deleteSelectedRows: async function () {
-            let wingsTable = document.getElementById('wings-table').childNodes('td')
-            let polesTable = document.getElementById('poles-table').childNodes('td')
-            Object.entries(wingsTable).forEach((value, key) => {
-                if (key.hasClass('selected')) {
-                    this.$data.removeFromField.wings.push(value)
-                }
-            })
-            Object.entries(polesTable).forEach((value, key) => {
-                if (key.hasClass('selected')) {
-                    this.$data.removeFromField.poles.push(value)
-                }
-            })
-            if (!this.$data.removeFromField.wings.empty()) {
+            this.$data.removeFromField.wings = []
+            this.$data.removeFromField.poles = []
+            this.getSelectedWings();
+            this.getSelectedPoles();
+            if (this.$data.removeFromField.wings.length !== 0) {
                 let url = '/main/delete-wing'
-                let response = await postRequest(url, this.$data.removeFromField.wings)
-                if (response.data.type == 'success') {
-                    this.$data.wingsOnField = response.data.data
+                let data = {}
+                data['wings'] = this.$data.removeFromField.wings
+                let response = await this.postRequest(url, data)
+                if (response.data.status == 'success') {
+                    await this.reloadData();
                 }
             }
-            if (!this.$data.removeFromField.wings.empty()) {
+            if (this.$data.removeFromField.poles.length !== 0) {
                 let url = '/main/delete-poles'
-                let response = await postRequest(url, this.$data.removeFromField.poles)
-                if (response.data.type == 'success') {
-                    this.$data.polesOnField = response.data.data
+                let data = {}
+                data['poles'] = this.$data.removeFromField.poles
+                let response = await this.postRequest(url, data)
+                console.log(response)
+                if (response.data.status == 'success') {
+                    await this.reloadData();
                 }
             }
         },
-        moveToWarehouse() {
-            if (this.selectedRow) {
-                if (confirm('Move to the Storage?')) {
-                    this.selectedRow.remove();
-                    this.selectedRow = null;
+        moveToWarehouse: async function () {
+            try {
+                let data = {}
+                let url = ''
+                if (this.selectedOption === 'wing') {
+                    data['id'] = this.addToField.wing.type
+                    data['db'] = this.addToField.wing.counter
+                    url = '/main/new-wing'
+                } else {
+                    data['id'] = this.addToField.pole.type
+                    data['db'] = this.addToField.pole.counter
+                    url = '/main/new-pole'
                 }
-            } else {
-                alert('Select to move');
+
+                let response = await this.postRequest(url, data)
+                if (response.data.status == 'success') {
+                    await this.reloadData()
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
         refresh: function () {
@@ -209,6 +254,11 @@ new Vue({
             if (this.addToField.pole.counter <= 0) {
                 this.addToField.pole.counter = this.addToField.pole.min;
             }
+        },
+        reloadData: async function () {
+            await this.getData();
+            this.getSelectedWings(true);
+            this.getSelectedPoles(true);
         }
     }
 });
