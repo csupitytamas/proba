@@ -26,10 +26,10 @@ try {
                         case 'on-field':
                             echo $view->getAllData();
                             exit;
-                        case 'new-wings':
+                        case 'new-wing':
                             echo $view->addWingsToField();
                             exit;
-                        case 'new-poles':
+                        case 'new-pole':
                             echo $view->addPolesToField();
                             exit;
                         case 'delete-wing':

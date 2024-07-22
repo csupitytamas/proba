@@ -36,7 +36,7 @@ abstract class AbstractMaps
 
             $sql = $this->addWings();
 
-            $result = $this->mysql->queryObject($sql);
+            $result = $this->mysql->insert($sql);
 
             return $this->jsonResponse($result);
         } catch (Exception $exception) {
@@ -67,17 +67,13 @@ abstract class AbstractMaps
         try {
             $this->getPostCheck();
 
-            $sql = $this->deleteWings();
+            $sqlCommands = $this->deleteWings();
 
-            $result = $this->mysql->query($sql);
-
-            if ($result) {
-                throw new Exception("Delete don't execute");
-            }
+            $this->mysql->executeAsTransaction($sqlCommands);
 
             $response = [
                 'status' => 'success',
-                'deleted_id' => $_POST["id"]
+                'reload' => true
             ];
 
             return $this->jsonResponse($response);
@@ -93,17 +89,13 @@ abstract class AbstractMaps
         try {
             $this->getPostCheck();
 
-            $sql = $this->deletePoles();
+            $sqlCommands = $this->deletePoles();
 
-            $result = $this->mysql->query($sql);
-
-            if ($result) {
-                throw new Exception("Delete don't execute");
-            }
+            $this->mysql->executeAsTransaction($sqlCommands);
 
             $response = [
                 'status' => 'success',
-                'deleted_id' => $_POST["id"]
+                'reload' => true
             ];
 
             return $this->jsonResponse($response);
@@ -112,4 +104,22 @@ abstract class AbstractMaps
         }
     }
     abstract protected function deletePoles();
+
+    public final function addToWarehouse()
+    {
+        try {
+            $this->getPostCheck();
+
+            $sqlCommand = "";
+
+            $this->mysql->update($sqlCommand);
+
+            $response = [
+                'status' => 'success',
+            ];
+            return $this->jsonResponse($response);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
+        }
+    }
 }

@@ -35,13 +35,13 @@ class Mysql
      *
      * @throws Exception If the execution of the query fails or if there are no results.
      */
-    public function queryObject(string $sql): object
+    public function queryObject(string $sql, $objectsResponse = true): object
     {
         $data = [];
         $result = $this->mysqli->query($sql);
         $this->executionCheck($result);
 
-        if ($result->num_rows == 1) {
+        if ($result->num_rows == 1 && $objectsResponse) {
             return $result->fetch_object();
         }
 
@@ -129,6 +129,38 @@ class Mysql
             throw new Exception("Hiba az insert során.");
         }
         return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delete(string $sql): bool
+    {
+        if (empty($sql)) {
+            throw new Exception("Empty query");
+        }
+        $result = $this->mysqli->query($sql);
+        if (!is_bool($result)) {
+            throw new Exception("Hiba az delete során.");
+        }
+        return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function executeAsTransaction(array $sqlCommands): void
+    {
+        $this->mysqli->begin_transaction();
+
+        foreach ($sqlCommands as $command) {
+            if (!$this->mysqli->query($command)) {
+                $this->mysqli->rollback();
+                throw new Exception('Hiba történt az SQL utasítás végrehajtása közben, az egész tranzakció visszagörgetésre kerül: ' . $this->mysqli->error);
+            }
+        }
+
+        $this->mysqli->commit();
     }
 
     /**

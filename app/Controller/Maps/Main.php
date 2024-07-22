@@ -2,6 +2,7 @@
 
 namespace App\Controller\Maps;
 
+use App\Controller\Entities\Kitoro;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
@@ -77,7 +78,7 @@ class Main extends AbstractMaps
             WHERE `palyan`.`palya` = " . $this->fieldId . "
             AND `palyan`.`kitoro` IS NOT NULL";
 
-        return $this->mysql->queryObject($sql);
+        return $this->mysql->queryObject($sql, false);
     }
 
     /**
@@ -98,19 +99,32 @@ class Main extends AbstractMaps
             WHERE `palyan`.`palya` = " . $this->fieldId . "
             AND `palyan`.`rudak` IS NOT NULL";
 
-        return $this->mysql->queryObject($sql);
+        return $this->mysql->queryObject($sql, false);
     }
 
     /**
      * Adds wings to the "kitoro" table.
      *
      * @return string The SQL query for inserting the wings.
+     * @throws Exception
      */
     protected function addWings(): string
     {
+        if (!isset($_POST['id']) && !isset($_POST['db'])) {
+            throw new Exception('No data to add wing');
+        }
+
+        $parameter = new StdClass();
+        $parameter->id = $_POST['id'];
+        $wingsEntity = new Kitoro($parameter);
+        $wing = json_decode($wingsEntity->get());
+
+        if (!$wing) {
+            throw new Exception('Wing not found!');
+        }
         return "
-            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
-            VALUES (" . $_POST['kitoro'] . "," . null . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ") 
+            INSERT INTO palyan (kitoro, rudak, palya, db)
+            VALUES (" . $wing->id . ", null ," . $this->fieldId . "," . $_POST['db'] . ") 
         ";
     }
 
@@ -130,24 +144,40 @@ class Main extends AbstractMaps
     /**
      * Deletes the wings from the "palyan" table based on specific conditions.
      *
-     * @return string Returns the SQL query to delete the wings.
+     * @return array Returns the SQL query to delete the wings.
+     * @throws Exception
      */
-    public function deleteWings(): string
+    public function deleteWings(): array
     {
-        return "
-            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND rudak IS NULL AND kitoro = " . $_POST["id"] . "
-        ";
+        $deletedWings = [];
+        if (is_array($_POST['wings'])) {
+            foreach ($_POST['wings'] as $wingId) {
+                $deletedWings[] = "DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND rudak IS NULL AND kitoro = '" . $wingId . "'";
+            }
+        }
+        else {
+            throw new Exception('Nem t0mb az adathalmaz');
+        }
+        return $deletedWings;
     }
 
     /**
      * Deletes the poles from the "palyan" table based on specific conditions.
      *
-     * @return string Returns the SQL query to delete the poles.
+     * @return array Returns an array of SQL queries to delete the poles.
+     * @throws Exception Throws an exception if the input is not an array.
      */
-    public function deletePoles(): string
+    public function deletePoles(): array
     {
-        return "
-            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = " . $_POST["id"] . "
-        ";
+        $deletedPoles = [];
+        if (is_array($_POST['poles'])) {
+            foreach ($_POST['poles'] as $poleId) {
+                $deletedPoles[] = "DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = '" . $poleId . "'";
+            }
+        }
+        else {
+            throw new Exception('Nem t0mb az adathalmaz');
+        }
+        return $deletedPoles;
     }
 }
