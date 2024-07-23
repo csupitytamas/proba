@@ -71,10 +71,10 @@ class Main extends AbstractMaps
      * This method executes a SQL query to fetch the name, quantity, and image of the wings
      * from the "palyan" and "kitoro" tables based on the current MAIN_ID value.
      *
-     * @return object An array containing the information of the wings on the field.
+     * @return object|null An array containing the information of the wings on the field.
      * @throws Exception
      */
-    protected function getWingsOnField(): object
+    protected function getWingsOnField(): ?object
     {
         $sql = "
             SELECT `palyan`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `palyan`.`db` 
@@ -92,10 +92,10 @@ class Main extends AbstractMaps
      * This method executes a SQL query to fetch the name, quantity, and image of the poles
      * from the "palyan" and "rudak" tables based on the current MAIN_ID value.
      *
-     * @return object An array containing the information of the poles on the field.
+     * @return object|null An array containing the information of the poles on the field.
      * @throws Exception
      */
-    protected function getPolesOnField(): object
+    protected function getPolesOnField(): ?object
     {
         $sql = "
             SELECT `palyan`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `palyan`.`db`, `palyan`.`hossz`
@@ -212,7 +212,15 @@ class Main extends AbstractMaps
         $deletedWings = [];
         if (is_array($_POST['wings'])) {
             foreach ($_POST['wings'] as $wingId) {
-                $deletedWings[] = "DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND rudak IS NULL AND kitoro = '" . $wingId . "'";
+                $object = new StdClass();
+                $parameter = new StdClass();
+                $parameter->id = $wingId;
+                $object->updatedField = $this->get($parameter->id);
+                $wingEntity = new Kitoro($object->updatedField);
+                $object->wing = $wingEntity->get();
+                $object->sql = "DELETE FROM palyan WHERE `id` = '" . $parameter->id . "'";
+
+                $deletedWings[] = $object;
             }
         }
         else {
@@ -232,12 +240,42 @@ class Main extends AbstractMaps
         $deletedPoles = [];
         if (is_array($_POST['poles'])) {
             foreach ($_POST['poles'] as $poleId) {
-                $deletedPoles[] = "DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = '" . $poleId . "'";
+                $object = new StdClass();
+                $parameter = new StdClass();
+                $parameter->id = $poleId;
+                $object->updatedField = $this->get($parameter->id);
+                $poleEntity = new Rudak($parameter);
+                $object->pole = $poleEntity->get();
+                $object->sql = "DELETE FROM palyan WHERE `id` = '" . $parameter->id . "'";
+
+                $deletedPoles[] = $object;
             }
         }
         else {
             throw new Exception('Nem t0mb az adathalmaz');
         }
         return $deletedPoles;
+    }
+
+    /**
+     * Retrieves a specific record from the "palyan" table based on the provided id.
+     *
+     * @param  int  $id  The id of the record to retrieve.
+     *
+     * @return mixed|null Returns the retrieved record from the "palyan" table or null if no record is found.
+     * @throws Exception if there is an error while retrieving the record.
+     */
+    public function get(int $id)
+    {
+        try {
+            $sql = "
+                SELECT *
+                FROM `palyan`
+                WHERE `id` = {$id}
+            ";
+            return $this->mysql->queryObject($sql);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
     }
 }

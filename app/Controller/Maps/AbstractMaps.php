@@ -66,6 +66,38 @@ abstract class AbstractMaps
         }
     }
 
+    /**
+     * Queries the database to check if the given object exists in the storage.
+     *
+     * @param  object  $object  The object to check against the storage. Must have either a 'wing' or 'pole' property.
+     *
+     * @return bool Returns true if the object exists in the storage, false otherwise.
+     * @throws Exception if an error occurs while querying the database.
+     */
+    public function onStorage(object $object): bool
+    {
+        try {
+            $sql = "
+                SELECT *
+                FROM raktar
+            ";
+            if (isset($object->wing)) {
+                $sql .= "WHERE kitoro = {$object->wing->id}";
+            }
+            else {
+                $sql .= "WHERE rudak = {$object->pole->id}";
+            }
+            $result = $this->mysql->queryObject($sql);
+
+            if (empty($result)) {
+                return false;
+            }
+            return true;
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
     public final function addWingsToField(): false|string
     {
         try {
@@ -138,9 +170,13 @@ abstract class AbstractMaps
         try {
             $this->getPostCheck();
 
-            $sqlCommands = $this->deleteWings();
+            $entitiesArray = $this->deleteWings();
 
-            $this->mysql->executeAsTransaction($sqlCommands);
+            foreach ($entitiesArray as $entity) {
+                $this->increaseStorageStock($entity);
+
+                $this->mysql->delete($entity->sql);
+            }
 
             $response = [
                 'status' => 'success',
@@ -160,9 +196,13 @@ abstract class AbstractMaps
         try {
             $this->getPostCheck();
 
-            $sqlCommands = $this->deletePoles();
+            $entitiesArray = $this->deletePoles();
 
-            $this->mysql->executeAsTransaction($sqlCommands);
+            foreach ($entitiesArray as $entity) {
+                $this->increaseStorageStock($entity);
+
+                $this->mysql->delete($entity->sql);
+            }
 
             $response = [
                 'status' => 'success',
@@ -180,27 +220,29 @@ abstract class AbstractMaps
      * Updates the storage stock.
      *
      * @param  object  $object
-     * @param  object  $fields  The fields object containing the stock information to update.
-     *
-     * @param  bool    $wing    The wing object to update the stock for.
      *
      * @return void Returns the formatted exception message if an exception occurs, otherwise null.
      *
      * @throws Exception
      */
-    public final function increaseStorageStock(object &$object, object &$fields, bool $wing = true): void
+    public final function increaseStorageStock(object &$object): void
     {
         try {
             $this->getPostCheck();
 
             $sqlCommand = "
                 UPDATE `raktar`
-                SET `db` = `db` + {$fields->db}";
-            if ($wing) {
-                $sqlCommand .= " WHERE `kitoro` = {$object->id}";
+                SET `db` = `db` + {$object->updatedField->db}
+                ";
+            if (isset($object->wing)) {
+                $sqlCommand .= "
+                    WHERE `kitoro` = {$object->updatedField->kitoro}
+                ";
             }
             else {
-                $sqlCommand .= " WHERE `rudak` = {$object->id}";
+                $sqlCommand .= "
+                    WHERE `rudak` = {$object->updatedField->rudak}
+                ";
             }
 
             $result = $this->mysql->update($sqlCommand);
