@@ -156,7 +156,7 @@ new Vue({
                 }
             }
             if (this.$data.removeFromField.poles.length !== 0) {
-                let url = '/main/delete-poles'
+                let url = '/main/delete-pole'
                 let data = {}
                 data['poles'] = this.$data.removeFromField.poles
                 let response = await this.postRequest(url, data)
