@@ -31,11 +31,11 @@ class Mysql
      *
      * @param string $sql The SQL query to be executed.
      *
-     * @return object The result of the query as an object.
+     * @return object|null The result of the query as an object.
      *
      * @throws Exception If the execution of the query fails or if there are no results.
      */
-    public function queryObject(string $sql, $objectsResponse = true): object
+    public function queryObject(string $sql, $objectsResponse = true): ?object
     {
         $data = [];
         $result = $this->mysqli->query($sql);
@@ -43,6 +43,10 @@ class Mysql
 
         if ($result->num_rows == 1 && $objectsResponse) {
             return $result->fetch_object();
+        }
+
+        if ($result->num_rows == 0 && $objectsResponse) {
+            return null;
         }
 
         while ($row = $result->fetch_object()) {
@@ -95,9 +99,6 @@ class Mysql
     {
         if (!$query) {
             throw new Exception('Execution failed');
-        }
-        if ($query->num_rows <= 0) {
-            throw new Exception('Elkerdezesnek nincs eredmenye');
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Maps;
 
 use App\Controller\Entities\Kitoro;
+use App\Controller\Entities\Rudak;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
@@ -53,11 +54,15 @@ class Main extends AbstractMaps
      */
     public function getAllData(): bool|string
     {
-        $response = new StdClass();
-        $response->wings = $this->getWingsOnField();
-        $response->poles = $this->getPolesOnField();
+        try {
+            $response = new StdClass();
+            $response->wings = $this->getWingsOnField();
+            $response->poles = $this->getPolesOnField();
 
-        return $this->jsonResponse($response);
+            return $this->jsonResponse($response);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage() . "|" . $exception->getFile() . "|" . $exception->getLine());
+        }
     }
 
     /**
@@ -72,7 +77,7 @@ class Main extends AbstractMaps
     protected function getWingsOnField(): object
     {
         $sql = "
-            SELECT `kitoro`.*
+            SELECT `palyan`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `palyan`.`db` 
             FROM `palyan`
             LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
             WHERE `palyan`.`palya` = " . $this->fieldId . "
@@ -93,7 +98,7 @@ class Main extends AbstractMaps
     protected function getPolesOnField(): object
     {
         $sql = "
-            SELECT `rudak`.*
+            SELECT `palyan`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `palyan`.`db`, `palyan`.`hossz`
             FROM `palyan`
             LEFT JOIN `rudak` ON `palyan`.`rudak` = `rudak`.`id`
             WHERE `palyan`.`palya` = " . $this->fieldId . "
@@ -105,40 +110,95 @@ class Main extends AbstractMaps
     /**
      * Adds wings to the "kitoro" table.
      *
-     * @return string The SQL query for inserting the wings.
+     * @return object The SQL query for inserting the wings.
      * @throws Exception
      */
-    protected function addWings(): string
+    protected function addWings(): object
     {
         if (!isset($_POST['id']) && !isset($_POST['db'])) {
             throw new Exception('No data to add wing');
         }
-
+        $response = new StdClass();
         $parameter = new StdClass();
         $parameter->id = $_POST['id'];
+        $parameter->db = $_POST['db'];
         $wingsEntity = new Kitoro($parameter);
-        $wing = json_decode($wingsEntity->get());
+        $response->wing = json_decode($wingsEntity->get());
+        $response->updatedField = $parameter;
+        $response->updatedField->palya = $this->fieldId;
 
-        if (!$wing) {
+        if (!$response->wing) {
             throw new Exception('Wing not found!');
         }
-        return "
-            INSERT INTO palyan (kitoro, rudak, palya, db)
-            VALUES (" . $wing->id . ", null ," . $this->fieldId . "," . $_POST['db'] . ") 
-        ";
+        if ($response->wing->db - $parameter->db < 0) {
+            throw new Exception('Not enough data to update storage');
+        }
+
+        if ($this->onField($this->fieldId, $response->wing->id)) {
+            $response->type = 'update';
+            $response->sql = "
+                UPDATE palyan
+                SET `db` = `db` + {$parameter->db}
+                WHERE `kitoro` = {$response->wing->id}
+                AND `rudak` IS NULL
+                AND `palya` = {$this->fieldId}
+            ";
+        } else {
+            $response->type = 'insert';
+            $response->sql = "
+                INSERT INTO palyan (kitoro, rudak, palya, db)
+                VALUES (" . $response->wing->id . ", null ," . $this->fieldId . "," . $parameter->db . ") 
+            ";
+        }
+
+        return $response;
     }
 
     /**
      * Inserts data into the "rudak" table based on user input.
      *
-     * @return string Returns the SQL query to add poles.
+     * @return object Returns the SQL query to add poles.
+     * @throws Exception
      */
-    protected function addPoles(): string
+    protected function addPoles(): object
     {
-        return "
-            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
-            VALUES (" . null . "," . $_POST['rudak'] . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ")
-        ";
+        if (!isset($_POST['id']) && !isset($_POST['db'])) {
+            throw new Exception('No data to add pole');
+        }
+        $response = new StdClass();
+        $parameter = new StdClass();
+        $parameter->id = $_POST['id'];
+        $parameter->db = $_POST['db'];
+        $poleEntity = new Rudak($parameter);
+        $response->pole = json_decode($poleEntity->get());
+        $response->updatedField = $parameter;
+        $response->updatedField->palya = $this->fieldId;
+
+        if (!$response->pole) {
+            throw new Exception('Pole not found!');
+        }
+        if ($response->pole->db - $parameter->db < 0) {
+            throw new Exception('Not enough data to update storage' . $response->pole->db . "," . $parameter->db);
+        }
+
+        if ($this->onField($this->fieldId, $response->pole->id, false)) {
+            $response->type = 'update';
+            $response->sql = "
+                UPDATE palyan
+                SET `db` = `db` + {$parameter->db}
+                WHERE `rudak` = {$response->pole->id}
+                AND `kitoro` IS NULL
+                AND `palya` = {$this->fieldId}
+            ";
+        } else {
+            $response->type = 'insert';
+            $response->sql = "
+                INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+                VALUES (null," . $response->pole->id . "," . $this->fieldId . "," . $parameter->db . "," . $response->pole->hossz . ") 
+            ";
+        }
+
+        return $response;
     }
 
     /**

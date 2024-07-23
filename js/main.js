@@ -48,25 +48,20 @@ new Vue({
     mounted() {
         this.$data.cookie = this.getCookie();
         this.getData();
-        this.getAvailableWings();
-        this.getAvailablePoles();
+        this.getAvailableWingsAndPoles();
     },
     methods: {
         getData: async function () {
             let url = '/main/on-field';
             let response = await this.getRequest(url)
-            this.$data.polesOnField = response.data.poles
             this.$data.wingsOnField = response.data.wings
+            this.$data.polesOnField = response.data.poles
         },
-        getAvailableWings: async function () {
-            let url = '/wings/get-wings';
+        getAvailableWingsAndPoles: async function () {
+            let url = '/storage/on-field';
             let response = await this.getRequest(url);
-            this.$data.availableWings = response.data
-        },
-        getAvailablePoles: async function () {
-            let url = '/poles/get-poles';
-            let response = await this.getRequest(url);
-            this.$data.availablePoles = response.data
+            this.$data.availableWings = response.data.wings
+            this.$data.availablePoles = response.data.poles
         },
         getSelectedWings: function (remove = false) {
             let wingsTable = document.getElementById('wings-table')
@@ -139,39 +134,12 @@ new Vue({
                 this.form.poleForm.show = true;
             }
         },
-        addRow() {
-            let table;
-            let newRow = document.createElement('tr');
-            newRow.addEventListener('click', this.selectRow);
-            if (this.selectedOption === 'kitoro') {
-                table = document.querySelector('.wings-table tbody');
-                newRow.innerHTML = `<td>${this.newRow.name}</td><td>${this.newRow.number}</td><td><img src="img/kep1.jpg" alt="Példa kép" style="max-width: 200px; max-height: 200px;"></td>`;
-            } else if (this.selectedOption === 'rudak') {
-                table = document.querySelector('.poles-table tbody');
-                newRow.innerHTML = `<td>${this.newRow.name}</td><td>${this.newRow.number}</td><td>${this.newRow.length}</td><td><img src="img/kep1.jpg" alt="Példa kép" style="max-width: 200px; max-height: 200px;">`;
-            }
-            table.appendChild(newRow);
-
-
-            this.showLabel = true;
-
-            this.newRow = {
-                name: '',
-                number: '',
-                length: ''
-            };
-        },
         selectRow(event) {
             if (event.currentTarget.classList.contains('selected')) {
                 event.currentTarget.classList.remove('selected');
             } else {
                 event.currentTarget.classList.add('selected');
             }
-        },
-        deleteRow(event) {
-            event.stopPropagation();
-            const row = event.target.closest('tr');
-            row.remove();
         },
         deleteSelectedRows: async function () {
             this.$data.removeFromField.wings = []
@@ -192,7 +160,6 @@ new Vue({
                 let data = {}
                 data['poles'] = this.$data.removeFromField.poles
                 let response = await this.postRequest(url, data)
-                console.log(response)
                 if (response.data.status == 'success') {
                     await this.reloadData();
                 }
@@ -259,6 +226,19 @@ new Vue({
             await this.getData();
             this.getSelectedWings(true);
             this.getSelectedPoles(true);
+            await this.getAvailableWingsAndPoles()
+            this.resetSelection()
+            this.hideForms()
+        },
+        resetSelection: function() {
+            this.selectedOption = '';
+            this.addToField.wing.type = '';
+            this.addToField.pole.type = '';
+        },
+        hideForms: function () {
+            this.form.show = false;
+            this.form.wingForm.show = false;
+            this.form.poleForm.show = false;
         }
     }
 });

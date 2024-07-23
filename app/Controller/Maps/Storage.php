@@ -51,11 +51,15 @@ class Storage extends AbstractMaps
      */
     public function getAllData(): bool|string
     {
-        $response = new StdClass();
-        $response->wings = $this->getWingsOnField();
-        $response->poles = $this->getPolesOnField();
+        try {
+            $response = new StdClass();
+            $response->wings = $this->getWingsOnField();
+            $response->poles = $this->getPolesOnField();
 
-        return $this->jsonResponse($response);
+            return $this->jsonResponse($response);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage() . "|" . $exception->getFile() . "|" . $exception->getLine());
+        }
     }
 
     /**
@@ -70,11 +74,12 @@ class Storage extends AbstractMaps
     protected function getWingsOnField(): object
     {
         $sql = "
-            SELECT `kitoro`.*
-            FROM `palyan`
-            LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
-            WHERE `palyan`.`palya` = " . $this->fieldId . "
-            AND `palyan`.`kitoro` IS NOT NULL";
+            SELECT `kitoro`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `raktar`.`db` 
+            FROM `raktar`
+            LEFT JOIN `kitoro` ON `kitoro`.`id` = `raktar`.`kitoro`
+            WHERE `raktar`.`rudak` IS NULL
+            AND `raktar`.`kitoro` IS NOT NULL
+            AND `raktar`.`db` != 0";
 
         return $this->mysql->queryObject($sql);
     }
@@ -91,21 +96,22 @@ class Storage extends AbstractMaps
     protected function getPolesOnField(): object
     {
         $sql = "
-            SELECT `rudak`.*
-            FROM `palyan`
-            LEFT JOIN `rudak` ON `palyan`.`rudak` = `rudak`.`id`
-            WHERE `palyan`.`palya` = " . $this->fieldId . "
-            AND `palyan`.`rudak` IS NOT NULL";
+            SELECT `rudak`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `raktar`.`db`, `rudak`.`hossz`
+            FROM `raktar`
+            LEFT JOIN `rudak` ON `rudak`.`id` = `raktar`.`rudak`
+            WHERE `raktar`.`rudak` IS NOT NULL
+            AND `raktar`.`kitoro` IS NULL
+            AND `raktar`.`db` != 0";
 
         return $this->mysql->queryObject($sql);
     }
 
     /**
-     * Adds wings to the "kitoro" table.
+     * Restock wings from field.
      *
      * @return string The SQL query for inserting the wings.
      */
-    protected function addWings(): string
+    protected function addWings(): object
     {
         return "
             INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
@@ -114,11 +120,11 @@ class Storage extends AbstractMaps
     }
 
     /**
-     * Inserts data into the "rudak" table based on user input.
+     * Restock poles from field.
      *
      * @return string Returns the SQL query to add poles.
      */
-    protected function addPoles(): string
+    protected function addPoles(): object
     {
         return "
             INSERT INTO palyan (kitoro, rudak, palya, db, hossz)

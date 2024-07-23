@@ -12,7 +12,7 @@ trait Response
             'status' => 'error',
             'message' => $message
         ];
-        return $this->jsonResponse($data);
+        return $this->jsonResponse($data, 400);
     }
 
     /**
@@ -24,7 +24,9 @@ trait Response
     protected function jsonResponse($data, int $status = 200): false|string
     {
         header('Content-Type: application/json');
-        // TODO add bad request header status code
+        if ($status !== 200) {
+            http_response_code($status);
+        }
         return json_encode($data);
     }
 
