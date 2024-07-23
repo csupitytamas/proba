@@ -1,7 +1,7 @@
 <body>
 <div id="app" class="bg-white">
     <header class="flex flex-row px-3 text-white justify-between items-center bg-[#5ab4cd]">
-        <h1 class=" ml-4 text-3xl">RESPECT ARENA </h1>
+        <h1 class=" ml-4 text-3xl">RESPECT ARENA</h1>
         <div class="float-right py-0.5">
             <form class="search" action="">
                 <input class="bg-white rounded-xl text-black"
@@ -28,12 +28,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="wings in this.$data.wingsOnField"
-                    @click="selectRow($event)">
-                    <td v-show="cookie == 'hu'">{{ wings.name_hu }}</td>
-                    <td v-show="cookie == 'en'">{{ wings.name_en }}</td>
-                    <td>{{ wings.db }}</td>
-                    <td class="max-w-sm h-auto">{{ wings.kep }}</td>
+                <tr v-for="wing in this.$data.wingsOnField"
+                    @click="selectRow($event)"
+                    :value="wing.id">
+                    <td v-show="cookie == 'hu'">{{ wing.name_hu }}</td>
+                    <td v-show="cookie == 'en'">{{ wing.name_en }}</td>
+                    <td>{{ wing.db }}</td>
+                    <td class="max-w-sm h-auto">{{ wing.kep }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -54,7 +55,8 @@
                 </thead>
                 <tbody>
                 <tr v-for="pole in this.$data.polesOnField"
-                    @click="selectRow($event)">
+                    @click="selectRow($event)"
+                    :value="pole.id">
                     <td v-show="cookie == 'hu'">{{ pole.name_hu }}</td>
                     <td v-show="cookie == 'en'">{{ pole.name_en }}</td>
                     <td>{{ pole.db }}</td>
@@ -88,7 +90,7 @@
                         {{ cookie == 'hu' ? wing.name_hu : wing.name_en }} - max {{ wing.db }} pieces
                     </option>
                 </select>
-                <label class="text-center text-lg font-bold">Number (minimum 2):</label>
+                <label class="text-center text-lg font-bold">Number (minimum  {{ addToField.wing.min }}):</label>
                 <input class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
                        type="number"
                        v-model="addToField.wing.counter"
@@ -108,7 +110,7 @@
                         {{ cookie == 'hu' ? pole.name_hu : pole.name_en }} - {{ pole.hossz }} meter /  max {{ pole.db }} pieces
                     </option>
                 </select>
-                <label class="text-center text-lg font-bold">Number (minimum 1):</label>
+                <label class="text-center text-lg font-bold">Number (minimum {{ addToField.pole.min }}):</label>
                 <input class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
                        type="number"
                        v-model="addToField.pole.counter"
@@ -116,7 +118,7 @@
                        :min="addToField.pole.min"
                        :max="addToField.pole.max">
             </div>
-            <button class="button-ok rounded-xl">ADD</button>
+            <button @click="moveToWarehouse" class="button-ok rounded-xl">ADD</button>
         </div>
         <div class="flex flex-row">
             <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-2xl text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
@@ -124,6 +126,6 @@
         </div>
     </div>
 </div>
-<script src="../../js/main.js"></script>
+<script src="../../js/respect.js"></script>
 </body>
 </html>
