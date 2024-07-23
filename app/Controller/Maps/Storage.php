@@ -10,7 +10,6 @@ class Storage extends AbstractMaps
 {
     use Response;
 
-    public const FIELD_NAME = 'storage';
     public Mysql $mysql;
     public object $parameters;
     private int $fieldId;
@@ -26,7 +25,6 @@ class Storage extends AbstractMaps
     {
         $this->mysql = new Mysql();
         $this->parameters = $parameters;
-        $this->fieldId = $this->getFieldId();
     }
 
     /**
@@ -36,11 +34,7 @@ class Storage extends AbstractMaps
      */
     protected function setId(): string
     {
-        return "
-            SELECT `id`
-            FROM palyak
-            WHERE `neve` = '" . self::FIELD_NAME . "'
-        ";
+        //
     }
 
     /**
@@ -56,7 +50,7 @@ class Storage extends AbstractMaps
             $response->wings = $this->getWingsOnField();
             $response->poles = $this->getPolesOnField();
 
-            return $this->jsonResponse($response);
+            return $this->jsonResponse($response, false);
         } catch (Exception $exception) {
             return $this->getExceptionFormat($exception->getMessage() . "|" . $exception->getFile() . "|" . $exception->getLine());
         }
@@ -81,7 +75,7 @@ class Storage extends AbstractMaps
             AND `raktar`.`kitoro` IS NOT NULL
             AND `raktar`.`db` != 0";
 
-        return $this->mysql->queryObject($sql);
+        return $this->mysql->queryObject($sql, false);
     }
 
     /**
@@ -114,7 +108,7 @@ class Storage extends AbstractMaps
     protected function addWings(): object
     {
         return "
-            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+            INSERT INTO raktar (kitoro, rudak, palya, db)
             VALUES (" . $_POST['kitoro'] . "," . null . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ") 
         ";
     }
@@ -127,7 +121,7 @@ class Storage extends AbstractMaps
     protected function addPoles(): object
     {
         return "
-            INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
+            INSERT INTO raktar (kitoro, rudak, palya, db, hossz)
             VALUES (" . null . "," . $_POST['rudak'] . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ")
         ";
     }
@@ -154,5 +148,25 @@ class Storage extends AbstractMaps
         return "
             DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = " . $_POST["id"] . "
         ";
+    }
+
+    public function get(bool $wing = true): false|string
+    {
+        try {
+            $sql = "
+                SELECT *
+                FROM `raktar`
+            ";
+            if ($wing) {
+                $sql .= "WHERE `kitoro` = {$this->parameters->id}";
+            }
+            else {
+                $sql .= "WHERE `rudak` = {$this->parameters->id}";
+            }
+
+            return $this->mysql->queryObject($sql);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
+        }
     }
 }
