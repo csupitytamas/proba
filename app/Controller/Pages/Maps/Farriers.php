@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Maps;
+namespace App\Controller\Pages\Maps;
 
 use App\Controller\Entities\Kitoro;
 use App\Controller\Entities\Rudak;
@@ -8,6 +8,7 @@ use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
 use stdClass;
+
 class Farriers extends AbstractMaps
 {
     use Response;

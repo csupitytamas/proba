@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Maps;
+namespace App\Controller\Pages\Maps;
 
 use App\Controller\Entities\Kitoro;
 use App\Controller\Entities\Rudak;
@@ -9,14 +9,14 @@ use App\Database\Mysql;
 use Exception;
 use stdClass;
 
-class Main extends AbstractMaps
+class Respect extends AbstractMaps
 {
     use Response;
 
-    public const FIELD_NAME = 'main';
+    public const FIELD_NAME = 'respect';
     public Mysql $mysql;
     public object $parameters;
-    public int $fieldId;
+    private int $fieldId;
 
     /**
      * Constructor method for the class.

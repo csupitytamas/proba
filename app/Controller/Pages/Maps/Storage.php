@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Controller\Maps;
+namespace App\Controller\Pages\Maps;
 
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
 use stdClass;
+
 class Storage extends AbstractMaps
 {
     use Response;
@@ -68,12 +69,14 @@ class Storage extends AbstractMaps
     protected function getWingsOnField(): object
     {
         $sql = "
-            SELECT `kitoro`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `raktar`.`db` 
-            FROM `raktar`
-            LEFT JOIN `kitoro` ON `kitoro`.`id` = `raktar`.`kitoro`
-            WHERE `raktar`.`rudak` IS NULL
-            AND `raktar`.`kitoro` IS NOT NULL
-            AND `raktar`.`db` != 0";
+                SELECT `kt`.`id`, `kt`.`name_hu`, `kt`.`name_en`, `raktar`.`db`, `kt`.`kep`, IFNULL(GROUP_CONCAT(DISTINCT `palyak`.`neve` SEPARATOR ' | '), 'storage') as `palya`
+                FROM `kitoro` as `kt`
+                LEFT JOIN `palyan` ON `kt`.`id` = `palyan`.`kitoro`
+                LEFT JOIN `palyak` ON `palyak`.`id` = `palyan`.`palya`
+                LEFT JOIN `raktar` ON `kt`.`id` = `raktar`.`kitoro`
+                WHERE `palyan`.`rudak` IS NULL
+                GROUP BY `kt`.`id`, `kt`.`name_hu`, `kt`.`name_en`, `kt`.`db`, `kt`.`kep`
+        ";
 
         return $this->mysql->queryObject($sql, false);
     }
@@ -90,12 +93,14 @@ class Storage extends AbstractMaps
     protected function getPolesOnField(): object
     {
         $sql = "
-            SELECT `rudak`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `raktar`.`db`, `rudak`.`hossz`
-            FROM `raktar`
-            LEFT JOIN `rudak` ON `rudak`.`id` = `raktar`.`rudak`
-            WHERE `raktar`.`rudak` IS NOT NULL
-            AND `raktar`.`kitoro` IS NULL
-            AND `raktar`.`db` != 0";
+                SELECT `rd`.`id`, `rd`.`name_hu`, `rd`.`name_en`, `raktar`.`db`, `rd`.`kep`,  `rd`.`hossz`, IFNULL(GROUP_CONCAT(DISTINCT `palyak`.`neve` SEPARATOR ' | '), 'storage') as `palya`
+                FROM `rudak` as `rd`
+                LEFT JOIN `palyan` ON `rd`.`id` = `palyan`.`rudak`
+                LEFT JOIN `palyak` ON `palyak`.`id` = `palyan`.`palya`
+                LEFT JOIN `raktar` ON `rd`.`id` = `raktar`.`rudak`
+                WHERE `palyan`.`kitoro` IS NULL
+                GROUP BY `rd`.`id`, `rd`.`name_hu`, `rd`.`name_en`, `rd`.`db`, `rd`.`kep`, `rd`.`hossz`
+        ";
 
         return $this->mysql->queryObject($sql);
     }
@@ -134,7 +139,7 @@ class Storage extends AbstractMaps
     public function deleteWings(): string
     {
         return "
-            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND rudak IS NULL AND kitoro = " . $_POST["id"] . "
+            DELETE FROM palyan WHERE palya = {$this->fieldId} AND rudak IS NULL AND kitoro = {$_POST["id"]}
         ";
     }
 
@@ -146,7 +151,7 @@ class Storage extends AbstractMaps
     public function deletePoles(): string
     {
         return "
-            DELETE FROM palyan WHERE palya = " . $this->fieldId . " AND kitoro IS NULL AND rudak = " . $_POST["id"] . "
+            DELETE FROM palyan WHERE palya = {$this->fieldId} AND kitoro IS NULL AND rudak = {$_POST["id"]}
         ";
     }
 

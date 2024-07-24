@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Maps;
+namespace App\Controller\Pages\Maps;
 
 use App\Controller\Traits\Response;
 use Exception;
