@@ -156,12 +156,12 @@ try {
                             exit;
                         default:
                             include('app/View/layout.html');
-                            include ('app/View/admin.html');
+                            include('app/View/Admin/dashboard.html');
                             exit;
                     }
                 }
                 include('app/View/layout.html');
-                include('app/View/admin.html');
+                include('app/View/Admin/dashboard.html');
                 exit;
             case 'poles':
                 if ($urlArray[1] ?? false) {
