@@ -31,8 +31,13 @@ class Rudak extends AbstractEntity implements EntityInterface
     {
         try {
             $sql = "
-                SELECT *
-                FROM " . self::TABLE_NAME . "
+                SELECT `rd`.*, IFNULL(GROUP_CONCAT(DISTINCT `palyak`.`neve` SEPARATOR ' | '), 'storage') as `palya`
+                FROM " . self::TABLE_NAME . " as `rd`
+                LEFT JOIN `palyan` ON `rd`.`id` = `palyan`.`rudak`
+                LEFT JOIN `palyak` ON `palyak`.`id` = `palyan`.`palya`
+                LEFT JOIN `raktar` ON `rd`.`id` = `raktar`.`rudak`
+                WHERE `palyan`.`kitoro` IS NULL
+                GROUP BY `rd`.`id`, `rd`.`name_hu`, `rd`.`name_en`, `rd`.`db`, `rd`.`kep`, `rd`.`hossz`;
             ";
 
             $result = $this->mysql->queryObject($sql);

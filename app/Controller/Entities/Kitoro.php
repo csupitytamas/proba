@@ -30,8 +30,8 @@ class Kitoro extends AbstractEntity implements EntityInterface
     {
         try {
             $sql = "
-                SELECT *
-                FROM " . self::TABLE_NAME . "
+                SELECT `kt`.`id`, `kt`.`name_hu`, `kt`.`name_en`, `kt`.`db`, `kt`.`kep`
+                FROM " . self::TABLE_NAME . " as `kt`
             ";
 
             $result = $this->mysql->queryObject($sql);
