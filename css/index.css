@@ -158,42 +158,6 @@ input[type=text], [type=number] {
     background: #ccc;
 }
 
-.table {
-    width: 80%;
-    margin-left: 10vw;
-    margin-right: 10vw;
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-    text-align: center;
-    align-items: center;
-    border-collapse: collapse;
-
-}
-
-.table th, td {
-    width: 25%;
-    border: 2px solid #353434;
-    font-size: 1.1em;
-}
-
-.table th {
-    font-family: Helvetica, sans-serif;
-    padding: 0.1em 0.1em;
-    font-size: 1.1em;
-    font-weight: inherit;
-    background-color: #87baca;
-    table-layout: fixed;
-
-}
-
-.table td {
-    font-family: Helvetica, sans-serif;
-    font-size: 1.1em;
-    padding: 0.3em 0.3em;
-    border-radius: 4px;
-
-}
-
 #formContainer {
     display: flex;
 }

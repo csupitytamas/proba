@@ -14,57 +14,80 @@
         </div>
     </header>
     <div class="container mx-auto mt-24 space-y-8">
-        <div class="flex flex-row text-center justify-center">
-            <table id="wings-table" class="w-full mx-4 my-3">
-                <thead class="bg-[#87baca] border border-2 border-black">
-                <tr>
-                    <th class="font-bold"
-                        colspan="4">WINGS</th>
-                </tr>
-                <tr>
-                    <th>Name</th>
-                    <th>Number of Items</th>
-                    <th>Picture</th>
+        <div class="container p-2 mx-auto sm:p-4 dark:text-black">
+        <h2 class="mb-4 text-2xl font-semibold leading-tight">Kitörők</h2>
+        <div class="overflow-x-auto">
+            <table id="wings-table" class="min-w-full text-base">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead class="bg-[#87baca] border-b border-black">
+                <tr class="text-center font-bold">
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Number of items</th>
+                    <th class="p-3">Picture</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="wing in this.$data.wingsOnField"
-                    @click="selectRow($event)"
-                    :value="wing.id">
-                    <td v-show="cookie == 'hu'">{{ wing.name_hu }}</td>
-                    <td v-show="cookie == 'en'">{{ wing.name_en }}</td>
-                    <td>{{ wing.db }}</td>
-                    <td class="max-w-sm h-auto">{{ wing.kep }}</td>
+                <tr v-for="wing in this.$data.wingsOnField" class="text-center border-b border-black dark:bg-gray-50">
+                    <td v-if="cookie == 'hu'" class="p-3">
+                        <p>{{ wing.name_hu }}</p>
+                    </td>
+                    <td v-else class="p-3">
+                        <p>{{ wing.name_en }}</p>
+                    </td>
+                    <td class="p-3">
+                        <p>{{ wing.db }}</p>
+                    </td>
+                    <td class="p-3">
+                        <p>{{ wing.kep }}</p>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div class="flex flex-row text-center justify-center">
-            <table id="poles-table" class="w-full mx-4 my-3">
-                <thead class="bg-[#87baca] border border-2 border-black">
-                <tr>
-                    <th colspan="5"
-                        class="font-bold">POLES</th>
-                </tr>
-                <tr>
-                    <th>Name</th>
-                    <th>Number of Items</th>
-                    <th>Length</th>
-                    <th>Picture</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="pole in this.$data.polesOnField"
-                    @click="selectRow($event)"
-                    :value="pole.id">
-                    <td v-show="cookie == 'hu'">{{ pole.name_hu }}</td>
-                    <td v-show="cookie == 'en'">{{ pole.name_en }}</td>
-                    <td>{{ pole.db }}</td>
-                    <td>{{ pole.hossz }}</td>
-                    <td class="max-w-sm h-auto">{{ pole.kep }}</td>
-                </tr>
-                </tbody>
-            </table>
+    </div>
+        <div class="container p-2 mx-auto sm:p-4 dark:text-black">
+            <h2 class="mb-4 text-2xl font-semibold leading-tight">Poles</h2>
+            <div class="overflow-x-auto">
+                <table id="poles-table" class="min-w-full text-base">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead class="bg-[#87baca] border-b border-black">
+                    <tr class="text-center font-bold">
+                        <th class="p-3">Name</th>
+                        <th class="p-3">Number of items</th>
+                        <th class="p-3">Length</th>
+                        <th class="p-3">Picture</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="pole in this.$data.polesOnField" class="text-center border-b border-black dark:bg-gray-50">
+                        <td v-if="cookie == 'hu'" class="p-3">
+                            <p>{{ pole.name_hu }}</p>
+                        </td>
+                        <td v-else class="p-3">
+                            <p>{{ pole.name_en }}</p>
+                        </td>
+                        <td class="p-3">
+                            <p>{{ pole.db }}</p>
+                        </td>
+                        <td class="p-3">
+                            <p>{{ pole.hossz }}</p>
+                        </td>
+                        <td class="p-3">
+                            <p>{{ pole.kep }}</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="flex flex-row justify-center">
             <select class="flex w-2/5 min-w-1 mx-1 my-auto p-0.5 justify-center text-base text-center text-black duration-300 cursor-pointer outline outline-2 outline-bg-[#a8dbea] bg-white rounded hover:text=[#87baca] hover:min-w-2 hover:text-lg hover:items-center"

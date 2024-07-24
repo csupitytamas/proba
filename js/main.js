@@ -58,7 +58,7 @@ new Vue({
             this.$data.polesOnField = response.data.poles
         },
         getAvailableWingsAndPoles: async function () {
-            let url = '/storage/on-field';
+            let url = '/storage/on-field?without=true';
             let response = await this.getRequest(url);
             this.$data.availableWings = response.data.wings
             this.$data.availablePoles = response.data.poles
