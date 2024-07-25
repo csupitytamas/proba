@@ -1,8 +1,8 @@
 <body>
 <div id="app" class="bg-white">
-    <header class="flex flex-row px-3 text-white justify-between items-center bg-[#5ab4cd]">
-        <h1 class=" ml-4 text-3xl">RESPECT ARENA</h1>
-        <div class="float-right py-0.5">
+    <header class="flex flex-col lg:flex-row min-h-20 px-3 py-2 lg:py-0 space-y-2 lg:space-y-0 text-white justify-between items-center bg-[#5ab4cd]">
+        <h1 class="lg:ml-4 text-3xl">RESPECT ARENA</h1>
+        <div v-if="false"  class="float-right py-0.5">
             <form class="search" action="">
                 <input class="bg-white rounded-xl text-black"
                        type="text"
@@ -30,7 +30,7 @@
             </li>
         </ol>
     </nav>
-    <div class="container mx-auto mt-24 space-y-8">
+    <div class="container mx-auto mt-8 lg:mt-24 pb-8 lg:pb-4 space-y-8">
         <div class="container p-2 mx-auto sm:p-4 dark:text-black">
             <h2 class="mb-4 text-2xl font-semibold leading-tight">Wings</h2>
             <div class="overflow-x-auto">
@@ -123,12 +123,12 @@
         </div>
         <div id="formContainer"
              v-show="this.$data.form.show"
-             class="flex flex-col w-2/5 mx-auto justify-center bg-white rounded-xl border border-2 border-bg-[#87baca]">
+             class="flex flex-col w-full lg:w-2/5 lg:mx-auto py-4 lg:py-4 justify-center bg-white rounded-xl border border-2 border-bg-[#87baca]">
             <div v-show="this.$data.form.wingForm.show"
                  class="flex flex-col w-full px-0.5 py-4 mx-auto my-auto space-y-4 text-center text-base">
                 <label class="text-center text-lg font-bold">Name:</label>
                 <select v-model="addToField.wing.type"
-                        class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl">
+                        class="flex w-5/6 lg:w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl">
                     <option disabled value="">SELECT WING</option>
                     <option v-for="wing in this.$data.availableWings"
                             :value="wing.id"
@@ -137,7 +137,7 @@
                     </option>
                 </select>
                 <label class="text-center text-lg font-bold">Number (minimum  {{ addToField.wing.min }}):</label>
-                <input class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
+                <input class="flex w-5/6 lg:w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
                        type="number"
                        v-model="addToField.wing.counter"
                        @change="checkWingMaxPieces"
@@ -148,7 +148,7 @@
                  class="flex flex-col w-full px-0.5 py-4 mx-auto my-auto space-y-4 text-center text-base">
                 <label class="text-center text-lg font-bold">Name:</label><br>
                 <select v-model="addToField.pole.type"
-                        class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center text-wrap border border-2 border-bg-black rounded-xl">
+                        class="flex w-5/6 lg:w-3/5 mx-auto p-3 bg-white text-center justify-center text-wrap border border-2 border-bg-black rounded-xl">
                     <option disabled selected value="">SELECT POLE</option>
                     <option v-for="pole in this.$data.availablePoles"
                             :value="pole.id"
@@ -157,17 +157,17 @@
                     </option>
                 </select>
                 <label class="text-center text-lg font-bold">Number (minimum {{ addToField.pole.min }}):</label>
-                <input class="flex w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
+                <input class="flex w-5/6 lg:w-3/5 mx-auto p-3 bg-white text-center justify-center border border-2 border-bg-black rounded-xl"
                        type="number"
                        v-model="addToField.pole.counter"
                        @change="checkPoleMaxPieces"
                        :min="addToField.pole.min"
                        :max="addToField.pole.max">
             </div>
-            <button @click="moveToWarehouse" class="button-ok rounded-xl">ADD</button>
+            <button @click="moveToWarehouse" class="flex w-5/6 lg:w-2/5 mx-auto px-4 py-6 justify-center bg-[#a8dbea] text-black font-bold cursor-pointer border text-[#1c1919] rounded-lg">ADD</button>
         </div>
-        <div class="flex flex-row">
-            <a class="flex w-2/5 mx-auto px-4 py-6 justify-center bg-[#8a0505] text-2xl text-[#1c1919] rounded rounder-2 cursor-pointer font-bold duration-600 hover:text-2xl"
+        <div class="flex flex-row justify-center">
+            <a class="flex w-5/6 lg:w-2/5 lg:mx-auto px-4 py-6 justify-center bg-[#8a0505] text-2xl text-[#1c1919] rounded-lg cursor-pointer font-bold duration-600 hover:text-2xl"
                @click="deleteSelectedRows">DELETE</a>
         </div>
     </div>

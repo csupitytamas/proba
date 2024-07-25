@@ -1,6 +1,6 @@
 <body>
     <div id="app">
-        <header class="flex flex-row min-h-20 px-3 mb-2 text-white justify-between items-center bg-[#5ab4cd]">
+        <header class="flex flex-col lg:flex-row min-h-20 px-3 py-6 lg:py-0 space-y-6 lg:space-y-0 text-white justify-between items-center bg-[#5ab4cd]">
             <h1 class=" ml-4 text-2xl">SAMORIN SHOW JUMPS</h1>
             <div class="flex flex-row justify-center items-center space-x-2">
                 <a href="/auth/login-page" class="mx-4">
@@ -17,13 +17,13 @@
                 <p class="ml-2">EN</p>
             </div>
         </header>
-        <div class="flex flex-col mx-auto mt-24 justify-center items-center">
-            <h2>ARENAS:</h2>
-            <button class="butt"  onclick="location.href='/main'">MAIN</button> <br>
-            <button class="butt"  onclick="location.href='/respect'">RESPECT</button> <br>
-            <button class="butt"  onclick="location.href='/farriers'">FARRIERS</button> <br>
-            <h2>STOCK:</h2>
-            <button class="butt"  onclick="location.href='/storage'">STORAGE</button> <br>
+        <div class="flex flex-col mx-auto mt-24 space-y-6 justify-center items-center">
+            <h2 class="text-2xl font-bold mb-4">ARENAS:</h2>
+            <a class="w-3/5 lg:w-2/6 bg-[#5ab4cd] px-6 py-4 rounded-lg text-center text-xl font-bold text-black" href="/main">MAIN</a> <br>
+            <a class="w-3/5 lg:w-2/6 bg-[#5ab4cd] px-6 py-4 rounded-lg text-center text-xl font-bold text-black" href="/respect">RESPECT</a> <br>
+            <a class="w-3/5 lg:w-2/6 bg-[#5ab4cd] px-6 py-4 rounded-lg text-center text-xl font-bold text-black" href="/farriers">FARRIERS</a> <br>
+            <h2 class="text-2xl font-bold">STOCK:</h2>
+            <a class="w-3/5 lg:w-2/6 bg-[#5ab4cd] px-6 py-4 rounded-lg text-center text-xl font-bold text-black" href="/storage">STORAGE</a> <br>
         </div>
         <footer>
             <p>ShowJumpEditor</p>
