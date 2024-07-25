@@ -36,7 +36,7 @@ class Kitoro extends AbstractEntity implements EntityInterface
                 FROM " . self::TABLE_NAME . " as `kt`
             ";
 
-            $result = $this->mysql->queryObject($sql);
+            $result = $this->mysql->queryObject($sql, false);
 
             return $this->jsonResponse($result);
         } catch (Exception $exception) {

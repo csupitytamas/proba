@@ -1,16 +1,7 @@
---CREATE DATABASE myDB;
-
---USE test;
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT UNIQUE,
     username VARCHAR(255),
     password CHAR(255)
-);
-CREATE TABLE permissions (
-
-);
-CREATE TABLE roles(
-
 );
 CREATE TABLE kitoro (
 	id BIGINT AUTO_INCREMENT UNIQUE,
@@ -33,34 +24,36 @@ CREATE TABLE palyak (
 );
 CREATE TABLE raktar (
 	id BIGINT AUTO_INCREMENT UNIQUE,
-    kitoro int default(null),
-    rudak int default(null),
+    kitoro int default NULL,
+    rudak int default NULL,
     db int,
-    hossz float default(null)
+    hossz float default NULL
 );
 CREATE TABLE palyan (
 	id BIGINT AUTO_INCREMENT UNIQUE,
-    kitoro int default(null),
-    rudak int default(null),
+    kitoro int default NULL,
+    rudak int default NULL,
 	palya int,
     db int,
-    hossz float default(null)
+    hossz float default NULL
 );
 
-INSERT INTO palyak (id, neve)
-VALUES  (1,'storage'),
-        (2,'main'),
-        (3,'respect'),
-        (4,'farriers');
+INSERT INTO palyak (neve)
+VALUES  ('main'),
+        ('respect'),
+        ('farriers');
 
-INSERT INTO palyan (kitoro, rudak, palya, db, hossz)
-VALUES  (1, null, 2, 4, null),
-        (2, null, 2, 2, null),
-        (3, null, 2, 6, null),
-        (null, 1, 2, 6, 3.5),
-        (null, 2, 2, 9, 3),
-        (null, 3, 2, 12, 2.5),
-        (null, 4, 2, 8, 2);
+INSERT INTO raktar (kitoro, rudak, db, hossz)
+VALUES  (1, null, 2, null),
+        (2, null, 4, null),
+        (3, null, 4, null),
+        (4, null, 8, null),
+        (null, 1, 12, 2.5),
+        (null, 2, 10, 3.5),
+        (null, 3, 6, 2.5),
+        (null, 4, 15, 3),
+        (null, 5, 7, 2);
+
 
 INSERT INTO kitoro (name_hu, name_en, db, kep)
 VALUES  ('samorin', 'samorin', 2, 'test.jpg'),

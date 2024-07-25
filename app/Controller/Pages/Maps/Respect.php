@@ -52,7 +52,7 @@ class Respect extends AbstractMaps
      * @return bool|string The JSON string representation of the data, or false on failure.
      * @throws Exception
      */
-    public function getAllData(): bool|string
+    public function getAllData(): bool|string|null
     {
         try {
             $response = new StdClass();
