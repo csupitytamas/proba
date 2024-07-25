@@ -68,7 +68,18 @@ class Storage extends AbstractMaps
      */
     protected function getWingsOnField(): object
     {
-        $sql = "
+        if (!empty($this->parameters->without) && $this->parameters->without) {
+            $sql = "
+                SELECT `kitoro`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `raktar`.`db`, `kitoro`.`kep`
+                FROM `raktar`
+                LEFT JOIN `kitoro` ON `kitoro`.`id` = `raktar`.`kitoro`
+                WHERE `raktar`.`kitoro` IS NOT NULL
+                AND `raktar`.`rudak` IS NULL
+                AND `raktar`.`db` != 0
+        ";
+        }
+        else {
+            $sql = "
                 SELECT `kt`.`id`, `kt`.`name_hu`, `kt`.`name_en`, `raktar`.`db`, `kt`.`kep`, IFNULL(GROUP_CONCAT(DISTINCT `palyak`.`neve` SEPARATOR ' | '), 'storage') as `palya`
                 FROM `kitoro` as `kt`
                 LEFT JOIN `palyan` ON `kt`.`id` = `palyan`.`kitoro`
@@ -77,6 +88,7 @@ class Storage extends AbstractMaps
                 WHERE `palyan`.`rudak` IS NULL
                 GROUP BY `kt`.`id`, `kt`.`name_hu`, `kt`.`name_en`, `kt`.`db`, `kt`.`kep`
         ";
+        }
 
         return $this->mysql->queryObject($sql, false);
     }
@@ -92,7 +104,18 @@ class Storage extends AbstractMaps
      */
     protected function getPolesOnField(): object
     {
-        $sql = "
+        if (!empty($this->parameters->without) && $this->parameters->without) {
+            $sql = "
+                SELECT `rudak`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `raktar`.`db`, `rudak`.`hossz`, `rudak`.`kep`
+                FROM `raktar`
+                LEFT JOIN `rudak` ON `rudak`.`id` = `raktar`.`rudak`
+                WHERE `raktar`.`rudak` IS NOT NULL
+                AND `raktar`.`kitoro` IS NULL
+                AND `raktar`.`db` != 0
+            ";
+        }
+        else {
+            $sql = "
                 SELECT `rd`.`id`, `rd`.`name_hu`, `rd`.`name_en`, `raktar`.`db`, `rd`.`kep`,  `rd`.`hossz`, IFNULL(GROUP_CONCAT(DISTINCT `palyak`.`neve` SEPARATOR ' | '), 'storage') as `palya`
                 FROM `rudak` as `rd`
                 LEFT JOIN `palyan` ON `rd`.`id` = `palyan`.`rudak`
@@ -101,6 +124,7 @@ class Storage extends AbstractMaps
                 WHERE `palyan`.`kitoro` IS NULL
                 GROUP BY `rd`.`id`, `rd`.`name_hu`, `rd`.`name_en`, `rd`.`db`, `rd`.`kep`, `rd`.`hossz`
         ";
+        }
 
         return $this->mysql->queryObject($sql);
     }
@@ -108,7 +132,7 @@ class Storage extends AbstractMaps
     /**
      * Restock wings from field.
      *
-     * @return string The SQL query for inserting the wings.
+     * @return object The SQL query for inserting the wings.
      */
     protected function addWings(): object
     {
@@ -121,7 +145,7 @@ class Storage extends AbstractMaps
     /**
      * Restock poles from field.
      *
-     * @return string Returns the SQL query to add poles.
+     * @return object Returns the SQL query to add poles.
      */
     protected function addPoles(): object
     {

@@ -77,7 +77,7 @@ class Respect extends AbstractMaps
     protected function getWingsOnField(): ?object
     {
         $sql = "
-            SELECT `palyan`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `palyan`.`db` 
+            SELECT `palyan`.`id`, `kitoro`.`name_hu`, `kitoro`.`name_en`, `palyan`.`db`, `kitoro`.`kep`
             FROM `palyan`
             LEFT JOIN `kitoro` ON `palyan`.`kitoro` = `kitoro`.`id`
             WHERE `palyan`.`palya` = " . $this->fieldId . "
@@ -98,7 +98,7 @@ class Respect extends AbstractMaps
     protected function getPolesOnField(): ?object
     {
         $sql = "
-            SELECT `palyan`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `palyan`.`db`, `palyan`.`hossz`
+            SELECT `palyan`.`id`, `rudak`.`name_hu`, `rudak`.`name_en`, `palyan`.`db`, `palyan`.`hossz`, `rudak`.`kep`
             FROM `palyan`
             LEFT JOIN `rudak` ON `palyan`.`rudak` = `rudak`.`id`
             WHERE `palyan`.`palya` = " . $this->fieldId . "
