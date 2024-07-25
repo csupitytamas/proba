@@ -3,9 +3,11 @@
 namespace App\Controller\Entities;
 
 use App\Controller\Interfaces\EntityInterface;
+use App\Controller\Pages\Maps\Storage;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
+use http\Exception\BadMethodCallException;
 
 class Kitoro extends AbstractEntity implements EntityInterface
 {
@@ -30,8 +32,8 @@ class Kitoro extends AbstractEntity implements EntityInterface
     {
         try {
             $sql = "
-                SELECT *
-                FROM " . self::TABLE_NAME . "
+                SELECT `kt`.`id`, `kt`.`name_hu`, `kt`.`name_en`, `kt`.`db`, `kt`.`kep`
+                FROM " . self::TABLE_NAME . " as `kt`
             ";
 
             $result = $this->mysql->queryObject($sql);
@@ -71,7 +73,7 @@ class Kitoro extends AbstractEntity implements EntityInterface
         try {
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
 
-            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated);
+            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated, true);
 
             if (empty($result)) {
                 return $this->jsonResponse([
@@ -79,6 +81,13 @@ class Kitoro extends AbstractEntity implements EntityInterface
                     'message' => "Kitorot nem lehet elmenteni."
                 ]);
             }
+
+            $this->getParameters->id = $result;
+            $kitoro = json_decode($this->get());
+            $kitoro->kitoro = $kitoro->id;
+            $storage = new Storage($kitoro);
+            $storage->addWings();
+
             return $this->jsonResponse([
                 'status' => 'success'
             ]);
@@ -110,7 +119,32 @@ class Kitoro extends AbstractEntity implements EntityInterface
     public function delete(): false|string
     {
         try {
-            // TODO legvégső esetben kell csak
+            if (!isset($this->getParameters->id)) {
+                throw new Exception('Missing id parameter or empty');
+            }
+            $storageEntity = new Storage($this->getParameters);
+            $kitoro = json_decode($this->get());
+            $storage = $storageEntity->get();
+            if ($kitoro->db != $storage->db) {
+                throw new Exception('Some wings on field!');
+            }
+
+            $deleteFromStorage = $storageEntity->deleteWing();
+
+            if (!$deleteFromStorage) {
+                throw new Exception('Can not delete from storage!');
+            }
+
+            $sql = "
+                DELETE FROM " . self::TABLE_NAME . "
+                WHERE id = {$this->getParameters->id}
+            ";
+
+            $this->mysql->delete($sql);
+
+            return $this->jsonResponse([
+                'status' => 'success'
+            ]);
         } catch (Exception $exception) {
             return $this->getExceptionFormat($exception->getMessage());
         }

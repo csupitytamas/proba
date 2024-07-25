@@ -1,0 +1,68 @@
+<body>
+<div id="app">
+    <div class="fixed top-0 left-0 right-0">
+        <header class="flex flex-row px-3 py-5 text-white justify-between items-center bg-[#5ab4cd]">
+            <h1 class="mx-2 ml-4 text-3xl">Edit Item</h1>
+        </header>
+        <nav aria-label="breadcrumb" class="w-full p-4 dark:bg-gray-100 dark:text-gray-800">
+            <ol class="flex h-8 space-x-2">
+                <li class="flex items-center">
+                    <a rel="noopener noreferrer" href="/" title="Back to homepage" class="hover:underline">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 pr-1 dark:text-gray-600">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" fill="currentColor" class="w-2 h-2 mt-1 transform rotate-90 fill-current dark:text-gray-400">
+                        <path d="M32 30.031h-32l16-28.061z"></path>
+                    </svg>
+                    <a rel="noopener noreferrer" href="/admin" class="flex items-center px-1 capitalize hover:underline">Admin</a>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" fill="currentColor" class="w-2 h-2 mt-1 transform rotate-90 fill-current dark:text-gray-400">
+                        <path d="M32 30.031h-32l16-28.061z"></path>
+                    </svg>
+                    <a rel="noopener noreferrer" href="/admin/edit" class="flex items-center px-1 capitalize hover:underline">Edit item</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <div class="h-dvh content-center">
+        <div class="flex flex-col space-y-8 justify-center items-center max-w-screen lg:w-2/5 lg:mx-auto px-2 py-8 bg-white border border-bg-[#e4e4e4] shadow rounded-lg">
+            <p v-if="selected.type == 'wing'" class="mb-2 justify-center items-center text-2xl">Kitörő elem</p>
+            <p v-else class="mb-2 justify-center items-center text-2xl">Rúd elem</p>
+            <div v-show="error.show" class="flex flex-row w-full justify-center pl-4 py-2 gap-2 items-center border rounded-lg shadow overflow-hidden bg-red-200 border-red-600">
+                <span class="flex-shrink-0 inline-flex mx-3 item-center justify-center leading-none rounded-full bg-red-500 text-red-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-8 w-8">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </span>
+                <div class="flex w-auto p-2">
+                    <p class="text-sm dark:text-gray-800">{{error.message}}</p>
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <div class="flex flex-col justify-center items-center">
+                    <input v-model="form.name_en" type="text" placeholder="Angol neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" >
+                    <input v-model="form.name_hu" type="text" placeholder="Magyar neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
+                    <input v-model="form.db" type="number" placeholder="Darabszám" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
+                    <select v-model="form.hossz"
+                            v-if="selected.type === 'pole'"
+                            class="w-full px-4 py-3 bg-white border border-black rounded-xl text-black text-lg text-center">
+                        <option disabled selected>Válassz hosszúságot</option>
+                        <option value="3.5">3.5</option>
+                        <option value="3">3</option>
+                        <option value="2.5">2.5</option>
+                        <option value="2">2</option>
+                    </select>
+                    <input v-if="false" type="file" class="file-input file-input-bordered max-w-xs mt-4 w-3/4" />
+                </div>
+                <button @click="sendForm" class="button-ok rounded-xl">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../../js/Admin/edit.js"></script>
+</html>

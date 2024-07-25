@@ -3,10 +3,10 @@
 use App\Controller\Entities\Kitoro;
 use App\Controller\Entities\Rudak;
 use App\Controller\Entities\User;
-use App\Controller\Maps\Farriers;
-use App\Controller\Maps\Main;
-use App\Controller\Maps\Respect;
-use App\Controller\Maps\Storage;
+use App\Controller\Pages\Maps\Farriers;
+use App\Controller\Pages\Maps\Main;
+use App\Controller\Pages\Maps\Respect;
+use App\Controller\Pages\Maps\Storage;
 use App\Helpers\Request;
 
 try {
@@ -21,22 +21,22 @@ try {
             case 'main':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
-                    $view = new Main($parameters);
+                    $main = new Main($parameters);
                     switch ($urlArray[1]) {
                         case 'on-field':
-                            echo $view->getAllData();
+                            echo $main->getAllData();
                             exit;
-                        case 'new-wings':
-                            echo $view->addWingsToField();
+                        case 'new-wing':
+                            echo $main->addWingsToField();
                             exit;
-                        case 'new-poles':
-                            echo $view->addPolesToField();
+                        case 'new-pole':
+                            echo $main->addPolesToField();
                             exit;
                         case 'delete-wing':
-                            echo $view->deleteWingsFromField();
+                            echo $main->deleteWingsFromField();
                             exit;
-                        case 'delete-poles':
-                            echo $view->deletePolesFromField();
+                        case 'delete-pole':
+                            echo $main->deletePolesFromField();
                             exit;
                         default:
                             include('app/View/layout.html');
@@ -50,22 +50,22 @@ try {
             case 'respect':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
-                    $view = new Respect($parameters);
+                    $respect = new Respect($parameters);
                     switch ($urlArray[1]) {
                         case 'on-field':
-                            echo $view->getAllData();
+                            echo $respect->getAllData();
                             exit;
-                        case 'new-wings':
-                            echo $view->addWingsToField();
+                        case 'new-wing':
+                            echo $respect->addWingsToField();
                             exit;
-                        case 'new-poles':
-                            echo $view->addPolesToField();
+                        case 'new-pole':
+                            echo $respect->addPolesToField();
                             exit;
                         case 'delete-wing':
-                            echo $view->deleteWingsFromField();
+                            echo $respect->deleteWingsFromField();
                             exit;
-                        case 'delete-poles':
-                            echo $view->deletePolesFromField();
+                        case 'delete-pole':
+                            echo $respect->deletePolesFromField();
                             exit;
                         default:
                             include('app/View/layout.html');
@@ -79,22 +79,22 @@ try {
             case 'farriers':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
-                    $view = new Farriers($parameters);
+                    $farriers = new Farriers($parameters);
                     switch ($urlArray[1]) {
                         case 'on-field':
-                            echo $view->getAllData();
+                            echo $farriers->getAllData();
                             exit;
-                        case 'new-wings':
-                            echo $view->addWingsToField();
+                        case 'new-wing':
+                            echo $farriers->addWingsToField();
                             exit;
-                        case 'new-poles':
-                            echo $view->addPolesToField();
+                        case 'new-pole':
+                            echo $farriers->addPolesToField();
                             exit;
                         case 'delete-wing':
-                            echo $view->deleteWingsFromField();
+                            echo $farriers->deleteWingsFromField();
                             exit;
-                        case 'delete-poles':
-                            echo $view->deletePolesFromField();
+                        case 'delete-pole':
+                            echo $farriers->deletePolesFromField();
                             exit;
                         default:
                             include('app/View/layout.html');
@@ -108,22 +108,28 @@ try {
             case 'storage':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
-                    $view = new Storage($parameters);
+                    $storage = new Storage($parameters);
                     switch ($urlArray[1]) {
                         case 'on-field':
-                            echo $view->getAllData();
+                            echo $storage->getAllData();
                             exit;
-                        case 'new-wings':
-                            echo $view->addWingsToField();
+                        case 'new-wing':
+                            echo $storage->addWings();
                             exit;
-                        case 'new-poles':
-                            echo $view->addPolesToField();
+                        case 'new-pole':
+                            echo $storage->addPoles();
+                            exit;
+                        case 'update-wing':
+                            echo $storage->updateWingPieces();
+                            exit;
+                        case 'update-pole':
+                            echo $storage->updatePolePieces();
                             exit;
                         case 'delete-wing':
-                            echo $view->deleteWingsFromField();
+                            echo $storage->deleteWing();
                             exit;
-                        case 'delete-poles':
-                            echo $view->deletePolesFromField();
+                        case 'delete-pole':
+                            echo $storage->deletePole();
                             exit;
                         default:
                             include('app/View/layout.html');
@@ -137,31 +143,23 @@ try {
             case 'admin':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
-                    $view = new Storage($parameters);
                     switch ($urlArray[1]) {
-                        case 'on-field':
-                            echo $view->getAllData();
+                        case 'edit':
+                            include('app/View/layout.html');
+                            include('app/View/Admin/edit.html');
                             exit;
-                        case 'new-wings':
-                            echo $view->addWingsToField();
-                            exit;
-                        case 'new-poles':
-                            echo $view->addPolesToField();
-                            exit;
-                        case 'delete-wing':
-                            echo $view->deleteWingsFromField();
-                            exit;
-                        case 'delete-poles':
-                            echo $view->deletePolesFromField();
+                        case 'new':
+                            include('app/View/layout.html');
+                            include('app/View/Admin/new.html');
                             exit;
                         default:
                             include('app/View/layout.html');
-                            include ('app/View/admin.html');
+                            include('app/View/Admin/dashboard.html');
                             exit;
                     }
                 }
                 include('app/View/layout.html');
-                include('app/View/admin.html');
+                include('app/View/Admin/dashboard.html');
                 exit;
             case 'poles':
                 if ($urlArray[1] ?? false) {

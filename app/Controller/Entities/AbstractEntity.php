@@ -73,14 +73,15 @@ abstract class AbstractEntity
     /**
      * Generates an SQL insert statement based on the given schema and data.
      *
-     * @param string  $table The schema which defines the database table.
-     * @param array  $schema The schema which defines the database fields.
-     * @param object $data   The data object containing the values to be inserted.
+     * @param  string  $table   The schema which defines the database table.
+     * @param  array   $schema  The schema which defines the database fields.
+     * @param  object  $data    The data object containing the values to be inserted.
+     * @param  bool    $last
      *
-     * @return bool Returns true if the insert statement was executed successfully, false otherwise.
+     * @return bool|int|string Returns true if the insert statement was executed successfully, false otherwise.
      * @throws Exception
      */
-    public function insertData(string $table, array $schema, object $data): bool
+    public function insertData(string $table, array $schema, object $data, bool $lastId = false): bool|int|string
     {
         if (empty($table)) {
             throw new Exception('Table name is required');
@@ -115,7 +116,7 @@ abstract class AbstractEntity
         }
         $sql .= ");";
 
-        return $this->mysql->insert($sql);
+        return $this->mysql->insert($sql, $lastId);
     }
 
     /**
