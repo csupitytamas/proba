@@ -1,7 +1,10 @@
 new Vue({
     el: '#app',
     data: {
-        selectedType: 'wing',
+        selected: {
+            type: 'wing',
+            id: null,
+        },
         form: {
             name_hu: null,
             name_en: null,
@@ -27,7 +30,7 @@ new Vue({
         },
         sendForm: async function () {
             let url = '';
-            if (this.$data.selectedType === 'wing') {
+            if (this.$data.selected.type === 'wing') {
                 url = '/wings/new-wing';
             } else {
                 url = '/poles/new-pole';
