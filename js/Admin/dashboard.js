@@ -35,17 +35,25 @@ new Vue({
                 console.log(error)
             }
         },
-        calculateWingUrl: function (id, edit = true) {
-            if (edit) {
-                return '/admin/edit?type=wing&id=' + id
-            }
-            return '/wings/delete-wing?id=' + id
+        calculateWingUrl: function (id) {
+            return '/admin/edit?type=wing&id=' + id
         },
-        calculatePoleUrl: function (id, edit = true) {
-            if (edit) {
-                return '/admin/edit?type=pole&id=' + id
+        calculatePoleUrl: function (id) {
+            return '/admin/edit?type=pole&id=' + id
+        },
+        deleteItem: async function (id, wing = true) {
+            let url = '';
+            if (wing) {
+                url = '/wings/delete-wing?id=' + id
+            } else {
+                url = '/poles/delete-pole?id=' + id
             }
-            return '/poles/delete-pole?id=' + id
+
+            let response = await this.getRequest(url)
+            if (response.data.status === 'success') {
+                await this.getWingsData();
+                await this.getPolesData();
+            }
         }
     }
 });
