@@ -1,7 +1,6 @@
 new Vue({
     el: '#app',
     data: {
-        selectedType: 'wing',
         selected: {
             type: 'wing',
             id: null,

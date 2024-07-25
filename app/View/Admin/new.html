@@ -1,5 +1,5 @@
 <body>
-<div id="app">
+<div id="app"  class="bg-white">
     <div class="fixed top-0 left-0 right-0">
         <header class="flex flex-row px-3 py-5 text-white justify-between items-center bg-[#5ab4cd]">
             <h1 class="mx-2 ml-4 text-3xl">New Item</h1>
@@ -44,9 +44,9 @@
             <div class="flex flex-col">
                 <div  class="flex flex-row justify-center items-center mb-2 " >
                     <p class="mr-2">Kitörő</p>
-                    <input type="radio" value="wing" v-model="selectedType" name="radio-7" class="radio radio-info mr-3 mb-1" checked="checked" />
+                    <input type="radio" value="wing" v-model="selected.type" name="radio-7" class="radio radio-info mr-3 mb-1" checked="checked" />
                     <p>vagy</p>
-                    <input type="radio" value="pole" v-model="selectedType" name="radio-7" class="radio radio-info ml-3" />
+                    <input type="radio" value="pole" v-model="selected.type" name="radio-7" class="radio radio-info ml-3" />
                     <p class="ml-2">Rúd</p>
                 </div>
                 <div class="flex flex-col justify-center items-center">
@@ -54,7 +54,7 @@
                     <input v-model="form.name_hu" type="text" placeholder="Magyar neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
                     <input v-model="form.db" type="number" placeholder="Darabszám" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
                     <select v-model="form.hossz"
-                            v-if="selectedType === 'pole'"
+                            v-if="selected.type === 'pole'"
                             class="w-full px-4 py-3 bg-white border border-black rounded-xl text-black text-lg text-center">
                         <option disabled selected>Válassz hosszúságot</option>
                         <option value="3.5">3.5</option>

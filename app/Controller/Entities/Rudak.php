@@ -41,7 +41,7 @@ class Rudak extends AbstractEntity implements EntityInterface
                 GROUP BY `rd`.`id`, `rd`.`name_hu`, `rd`.`name_en`, `rd`.`db`, `rd`.`kep`, `rd`.`hossz`;
             ";
 
-            $result = $this->mysql->queryObject($sql);
+            $result = $this->mysql->queryObject($sql, false);
 
             return $this->jsonResponse($result);
         } catch (Exception $exception) {

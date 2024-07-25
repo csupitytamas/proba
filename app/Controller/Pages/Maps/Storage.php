@@ -65,7 +65,7 @@ class Storage extends AbstractEntity
      * @return object An array containing the information of the wings on the field.
      * @throws Exception
      */
-    protected function getWingsOnField(): object
+    protected function getWingsOnField(): object|null
     {
         if (!empty($this->parameters->without) && $this->parameters->without) {
             $sql = "
@@ -101,7 +101,7 @@ class Storage extends AbstractEntity
      * @return object An array containing the information of the poles on the field.
      * @throws Exception
      */
-    protected function getPolesOnField(): object
+    protected function getPolesOnField(): object|null
     {
         if (!empty($this->parameters->without) && $this->parameters->without) {
             $sql = "
@@ -125,7 +125,7 @@ class Storage extends AbstractEntity
         ";
         }
 
-        return $this->mysql->queryObject($sql);
+        return $this->mysql->queryObject($sql, false);
     }
 
     /**

@@ -1,8 +1,8 @@
 <body>
-<div id="app">
-    <header class="flex flex-row px-6 text-white justify-between items-center bg-[#5ab4cd]">
-        <h1 class=" ml-4 text-3xl">STORAGE</h1>
-        <div class="float-right py-0.5 flex flex-row">
+<div id="app" class="bg-white">
+    <header class="flex flex-col lg:flex-row min-h-20 px-3 py-2 lg:py-0 space-y-2 lg:space-y-0 text-white justify-between items-center bg-[#5ab4cd]">
+        <h1 class="lg:ml-4 text-3xl">STORAGE</h1>
+        <div v-if="false"  class="float-right py-0.5">
             <div class="flex flex-row float-right px-4 items-center space-x-1 ">
                 <form class="search" action="">
                     <input class="bg-white mt-1 rounded-xl text-black" type="text" placeholder="Search.." name="search">
@@ -28,7 +28,7 @@
             </li>
         </ol>
     </nav>
-    <div class="container mx-auto mt-24 space-y-8">
+    <div class="container mx-auto mt-8 lg:mt-24 pb-8 lg:pb-4 space-y-8">
         <div class="container p-2 mx-auto sm:p-4 dark:text-black">
             <h2 class="mb-4 text-2xl font-semibold leading-tight">Wings</h2>
             <div class="overflow-x-auto">
@@ -114,7 +114,7 @@
                 </table>
             </div>
         </div>
-        <div class="join grid grid-cols-2 w-2/5 items-center">
+        <div v-if="false" class="join grid grid-cols-2 w-2/5 items-center">
             <button class="join-item btn btn-outline">Previous page</button>
             <button class="join-item btn btn-outline">Next</button>
         </div>
