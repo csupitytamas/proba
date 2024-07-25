@@ -3,6 +3,7 @@
 namespace App\Controller\Entities;
 
 use App\Controller\Interfaces\EntityInterface;
+use App\Controller\Pages\Maps\Storage;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
@@ -71,7 +72,7 @@ class Kitoro extends AbstractEntity implements EntityInterface
         try {
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
 
-            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated);
+            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated, true);
 
             if (empty($result)) {
                 return $this->jsonResponse([
@@ -79,6 +80,13 @@ class Kitoro extends AbstractEntity implements EntityInterface
                     'message' => "Kitorot nem lehet elmenteni."
                 ]);
             }
+
+            $this->getParameters->id = $result;
+            $kitoro = json_decode($this->get());
+            $kitoro->kitoro = $kitoro->id;
+            $storage = new Storage($kitoro);
+            $storage->addWings();
+
             return $this->jsonResponse([
                 'status' => 'success'
             ]);

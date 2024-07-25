@@ -3,6 +3,7 @@
 namespace App\Controller\Entities;
 
 use App\Controller\Interfaces\EntityInterface;
+use App\Controller\Pages\Maps\Storage;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
@@ -77,7 +78,7 @@ class Rudak extends AbstractEntity implements EntityInterface
         try {
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
 
-            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated);
+            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated,true);
 
             if (empty($result)) {
                 return $this->jsonResponse([
@@ -85,6 +86,13 @@ class Rudak extends AbstractEntity implements EntityInterface
                     'message' => "Rudat nem lehet elmenteni."
                 ]);
             }
+
+            $this->getParameters->id = $result;
+            $rud = json_decode($this->get());
+            $rud->rudak = $rud->id;
+            $storage = new Storage($rud);
+            $storage->addPoles();
+
             return $this->jsonResponse([
                 'status' => 'success'
             ]);

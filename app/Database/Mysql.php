@@ -2,6 +2,7 @@
 
 namespace app\Database;
 
+use App\Controller\Entities\Permission;
 use Exception;
 use mysqli;
 use mysqli_result;
@@ -105,12 +106,15 @@ class Mysql
     /**
      * @throws Exception
      */
-    public function insert(string $sql): bool
+    public function insert(string $sql, bool $lastId = false): bool|int|string
     {
         if (empty($sql)) {
             throw new Exception("Empty query");
         }
         $result = $this->mysqli->query($sql);
+        if ($lastId) {
+            return $this->mysqli->insert_id;
+        }
         if (!is_bool($result)) {
             throw new Exception("Hiba az insert során.");
         }
