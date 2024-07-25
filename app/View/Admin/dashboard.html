@@ -1,16 +1,33 @@
 <body>
 <div id="app">
-    <header class="flex flex-row px-3 mb-2 text-white justify-between items-center bg-[#5ab4cd]">
+    <header class="flex flex-row px-3 text-white justify-between items-center bg-[#5ab4cd]">
         <h1 class="mx-2 ml-4 text-3xl">Admin</h1>
         <div class="float-right p-2 my-2 bg-[#5ab4cd] text-center text-black text-lg border-2 border-black rounded-lg cursor-pointer hover:bg-[#75a0aa]">
-            <button @click>
+            <a href="/admin/new">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                 </svg>
-            </button>
+            </a>
         </div>
     </header>
+    <nav aria-label="breadcrumb" class="w-full p-4 dark:bg-gray-100 dark:text-gray-800">
+        <ol class="flex h-8 space-x-2">
+            <li class="flex items-center">
+                <a rel="noopener noreferrer" href="/" title="Back to homepage" class="hover:underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 pr-1 dark:text-gray-600">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" fill="currentColor" class="w-2 h-2 mt-1 transform rotate-90 fill-current dark:text-gray-400">
+                    <path d="M32 30.031h-32l16-28.061z"></path>
+                </svg>
+                <a rel="noopener noreferrer" href="/admin" class="flex items-center px-1 capitalize hover:underline">Admin</a>
+            </li>
+        </ol>
+    </nav>
     <div class="container p-2 mx-auto sm:p-4 dark:text-black">
         <h2 class="mb-4 text-2xl font-semibold leading-tight">Kitörők</h2>
         <div class="overflow-x-auto">

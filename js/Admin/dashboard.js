@@ -37,13 +37,13 @@ new Vue({
         },
         calculateWingUrl: function (id, edit = true) {
             if (edit) {
-                return '/wings/edit-wing?id=' + id
+                return '/admin/edit?type=wing&id=' + id
             }
             return '/wings/delete-wing?id=' + id
         },
         calculatePoleUrl: function (id, edit = true) {
             if (edit) {
-                return '/poles/edit-pole?id=' + id
+                return '/admin/edit?type=pole&id=' + id
             }
             return '/poles/delete-pole?id=' + id
         }
