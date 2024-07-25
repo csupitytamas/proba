@@ -125,7 +125,7 @@ class Storage extends AbstractEntity
         ";
         }
 
-        return $this->mysql->queryObject($sql);
+        return $this->mysql->queryObject($sql, false);
     }
 
     /**
