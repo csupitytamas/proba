@@ -4,12 +4,6 @@
         <h1 class=" ml-4 text-3xl">STORAGE</h1>
         <div class="float-right py-0.5 flex flex-row">
             <div class="flex flex-row float-right px-4 items-center space-x-1 ">
-                <a href='/admin'>
-                    <img class="img" src="/img/free-plus-icon-3107-thumb.png" alt="new-img">
-                </a>
-                <a href='/' class="ml-17">
-                    <img class="img" src="/img/avfe23a6b11d1ff4752fd.png" alt="home_img">
-                </a>
                 <form class="search" action="">
                     <input class="bg-white mt-1 rounded-xl text-black" type="text" placeholder="Search.." name="search">
                     <button class="mx-2 my-2" type="submit"><i class="fa fa-search"></i></button>
@@ -17,6 +11,23 @@
             </div>
         </div>
     </header>
+    <nav aria-label="breadcrumb" class="w-full p-4 dark:bg-gray-100 dark:text-gray-800">
+        <ol class="flex h-8 space-x-2">
+            <li class="flex items-center">
+                <a rel="noopener noreferrer" href="/" title="Back to homepage" class="hover:underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 pr-1 dark:text-gray-600">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" fill="currentColor" class="w-2 h-2 mt-1 transform rotate-90 fill-current dark:text-gray-400">
+                    <path d="M32 30.031h-32l16-28.061z"></path>
+                </svg>
+                <a rel="noopener noreferrer" href="/storage" class="flex items-center px-1 capitalize hover:underline">Storage</a>
+            </li>
+        </ol>
+    </nav>
     <div class="container mx-auto mt-24 space-y-8">
         <div class="container p-2 mx-auto sm:p-4 dark:text-black">
             <h2 class="mb-4 text-2xl font-semibold leading-tight">Wings</h2>
@@ -108,7 +119,7 @@
             <button class="join-item btn btn-outline">Next</button>
         </div>
     </div>
+</div>
 </body>
 <script src="../../js/raktar.js"></script>
-<script src="../../js/str.js"></script>
 </html>

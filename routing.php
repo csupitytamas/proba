@@ -114,16 +114,16 @@ try {
                             echo $storage->getAllData();
                             exit;
                         case 'new-wing':
-                            echo $storage->addWingsToField();
+                            echo $storage->addWings();
                             exit;
                         case 'new-pole':
-                            echo $storage->addPolesToField();
+                            echo $storage->addPoles();
                             exit;
                         case 'delete-wing':
-                            echo $storage->deleteWingsFromField();
+                            echo $storage->deleteWings();
                             exit;
                         case 'delete-pole':
-                            echo $storage->deletePolesFromField();
+                            echo $storage->deletePoles();
                             exit;
                         default:
                             include('app/View/layout.html');
@@ -137,22 +137,14 @@ try {
             case 'admin':
                 if ($urlArray[1] ?? false) {
                     Request::calculateUrlAndParameters($urlArray[1], $parameters);
-                    $view = new Storage($parameters);
                     switch ($urlArray[1]) {
-                        case 'on-field':
-                            echo $view->getAllData();
+                        case 'edit':
+                            include('app/View/layout.html');
+                            include('app/View/Admin/edit.html');
                             exit;
-                        case 'new-wings':
-                            echo $view->addWingsToField();
-                            exit;
-                        case 'new-poles':
-                            echo $view->addPolesToField();
-                            exit;
-                        case 'delete-wing':
-                            echo $view->deleteWingsFromField();
-                            exit;
-                        case 'delete-poles':
-                            echo $view->deletePolesFromField();
+                        case 'new':
+                            include('app/View/layout.html');
+                            include('app/View/Admin/new.html');
                             exit;
                         default:
                             include('app/View/layout.html');

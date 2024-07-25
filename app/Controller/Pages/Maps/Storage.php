@@ -2,15 +2,24 @@
 
 namespace App\Controller\Pages\Maps;
 
+use App\Controller\Entities\AbstractEntity;
+use App\Controller\Entities\Permission;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
 use stdClass;
 
-class Storage extends AbstractMaps
+class Storage extends AbstractEntity
 {
     use Response;
 
+    protected const TABLE_NAME = 'raktar';
+    protected const STRUCTURE_SCHEMA = [
+        'kitoro',
+        'rudak',
+        'db',
+        'hossz'
+    ];
     public Mysql $mysql;
     public object $parameters;
     private int $fieldId;
@@ -26,16 +35,6 @@ class Storage extends AbstractMaps
     {
         $this->mysql = new Mysql();
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Sets the ID based on a SQL query to retrieve the ID from the "palyak" table.
-     *
-     * @return string Returns the SQL query to retrieve the ID.
-     */
-    protected function setId(): string
-    {
-        //
     }
 
     /**
@@ -132,27 +131,83 @@ class Storage extends AbstractMaps
     /**
      * Restock wings from field.
      *
-     * @return object The SQL query for inserting the wings.
+     * @return false|string The SQL query for inserting the wings.
+     * @throws Exception
      */
-    protected function addWings(): object
+    public function addWings(): false|string
     {
-        return "
-            INSERT INTO raktar (kitoro, rudak, palya, db)
-            VALUES (" . $_POST['kitoro'] . "," . null . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ") 
-        ";
+        try {
+            if (empty($this->parameters)) {
+                $this->getPostCheck();
+
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
+            }
+            else {
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, (array)$this->parameters);
+            }
+
+            $sql = "
+                INSERT INTO " . self::TABLE_NAME . " (kitoro, db)
+                VALUES ({$validated->kitoro},{$validated->db}) 
+            ";
+
+            $result = $this->mysql->insert($sql);
+            if (!$result) {
+                throw new Exception('Failed to insert wings');
+            }
+
+            $response = [
+                'status' => 'success',
+            ];
+
+            return $this->jsonResponse($response);
+        } catch (Exception $exception) {
+            if (empty($this->parameters)) {
+                return $this->getExceptionFormat($exception->getMessage());
+            }
+            throw new Exception($exception->getMessage());
+        }
     }
 
     /**
      * Restock poles from field.
      *
-     * @return object Returns the SQL query to add poles.
+     * @return false|string Returns the SQL query to add poles.
+     * @throws Exception
      */
-    protected function addPoles(): object
+    public function addPoles(): false|string
     {
-        return "
-            INSERT INTO raktar (kitoro, rudak, palya, db, hossz)
-            VALUES (" . null . "," . $_POST['rudak'] . "," . $this->fieldId . "," . $_POST['db'] . "," .$_POST['hossz'] . ")
-        ";
+        try {
+            if (empty($this->parameters)) {
+                $this->getPostCheck();
+
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
+            }
+            else {
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, (array)$this->parameters);
+            }
+
+            $sql = "
+                INSERT INTO " . self::TABLE_NAME . " (rudak, db, hossz)
+                VALUES ({$validated->rudak},{$validated->db},{$validated->hossz}) 
+            ";
+
+            $result = $this->mysql->insert($sql);
+            if (!$result) {
+                throw new Exception('Failed to update wings');
+            }
+
+            $response = [
+                'status' => 'success',
+            ];
+
+            return $this->jsonResponse($response);
+        } catch (Exception $exception) {
+            if (empty($this->parameters)) {
+                return $this->getExceptionFormat($exception->getMessage());
+            }
+            throw new Exception($exception->getMessage());
+        }
     }
 
     /**
