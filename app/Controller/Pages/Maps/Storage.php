@@ -213,13 +213,20 @@ class Storage extends AbstractEntity
     /**
      * Deletes the wings from the "palyan" table based on specific conditions.
      *
-     * @return string Returns the SQL query to delete the wings.
+     * @return bool Returns the SQL query to delete the wings.
      */
-    public function deleteWings(): string
+    public function deleteWing(): bool
     {
-        return "
-            DELETE FROM palyan WHERE palya = {$this->fieldId} AND rudak IS NULL AND kitoro = {$_POST["id"]}
-        ";
+        try {
+            $sql = "
+                DELETE FROM " . self::TABLE_NAME . "
+                WHERE id = {$this->parameters->id}
+            ";
+
+            return $this->mysql->delete($sql);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
+        }
     }
 
     /**
@@ -227,14 +234,81 @@ class Storage extends AbstractEntity
      *
      * @return string Returns the SQL query to delete the poles.
      */
-    public function deletePoles(): string
+    public function deletePole(): bool
     {
-        return "
-            DELETE FROM palyan WHERE palya = {$this->fieldId} AND kitoro IS NULL AND rudak = {$_POST["id"]}
-        ";
+        try {
+            $sql = "
+                DELETE FROM " . self::TABLE_NAME . "
+                WHERE id = {$this->parameters->id}
+            ";
+
+            return $this->mysql->delete($sql);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
+        }
     }
 
-    public function get(bool $wing = true): false|string
+    /**
+     * Deletes the wings from the "palyan" table based on specific conditions.
+     *
+     * @return string Returns the SQL query to delete the wings.
+     */
+    public function updateWingPieces($increasedValue): string
+    {
+        try {
+            if (empty($this->parameters)) {
+                $this->getPostCheck();
+
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
+            }
+            else {
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, (array)$this->parameters);
+            }
+
+            $sql = "
+                UPDATE `raktar`
+                SET `db` = `db` + {$increasedValue}
+                WHERE `kitoro` = {$validated->kitoro}
+                AND `rudak` IS NULL
+            ";
+
+            return $this->mysql->update($sql);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
+        }
+    }
+
+    /**
+     * Deletes the poles from the "palyan" table based on specific conditions.
+     *
+     * @return string Returns the SQL query to delete the poles.
+     */
+    public function updatePolePieces($increasedValue): string
+    {
+        try {
+            if (empty($this->parameters)) {
+                $this->getPostCheck();
+
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
+            }
+            else {
+                $validated = $this->validate(self::STRUCTURE_SCHEMA, (array)$this->parameters);
+            }
+
+            $sql = "
+                UPDATE `raktar`
+                SET `db` = `db` + {$increasedValue}
+                WHERE `rudak` = {$validated->rudak}
+                AND `kitoro` IS NULL
+            ";
+
+            return $this->mysql->update($sql);
+        } catch (Exception $exception) {
+            return $this->getExceptionFormat($exception->getMessage());
+        }
+    }
+
+    public function get(bool $wing = true): object|false|null
     {
         try {
             $sql = "

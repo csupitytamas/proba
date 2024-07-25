@@ -119,11 +119,17 @@ try {
                         case 'new-pole':
                             echo $storage->addPoles();
                             exit;
+                        case 'update-wing':
+                            echo $storage->updateWingPieces();
+                            exit;
+                        case 'update-pole':
+                            echo $storage->updatePolePieces();
+                            exit;
                         case 'delete-wing':
-                            echo $storage->deleteWings();
+                            echo $storage->deleteWing();
                             exit;
                         case 'delete-pole':
-                            echo $storage->deletePoles();
+                            echo $storage->deletePole();
                             exit;
                         default:
                             include('app/View/layout.html');

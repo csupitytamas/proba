@@ -124,7 +124,32 @@ class Rudak extends AbstractEntity implements EntityInterface
     public function delete(): false|string
     {
         try {
-            // TODO legvégső esetben kell csak
+            if (!isset($this->getParameters->id)) {
+                throw new Exception('Missing id parameter or empty');
+            }
+            $storageEntity = new Storage($this->getParameters);
+            $rud = json_decode($this->get());
+            $storage = $storageEntity->get(false);
+            if ($rud->db != $storage->db) {
+                throw new Exception('Some poles on field!');
+            }
+
+            $deleteFromStorage = $storageEntity->deletePole();
+
+            if (!$deleteFromStorage) {
+                throw new Exception('Can not delete from storage!');
+            }
+
+            $sql = "
+                DELETE FROM " . self::TABLE_NAME . "
+                WHERE id = {$this->getParameters->id}
+            ";
+
+            $this->mysql->delete($sql);
+
+            return $this->jsonResponse([
+                'status' => 'success'
+            ]);
         } catch (Exception $exception) {
             return $this->getExceptionFormat($exception->getMessage());
         }

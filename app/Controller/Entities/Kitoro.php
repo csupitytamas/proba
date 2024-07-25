@@ -7,6 +7,7 @@ use App\Controller\Pages\Maps\Storage;
 use App\Controller\Traits\Response;
 use App\Database\Mysql;
 use Exception;
+use http\Exception\BadMethodCallException;
 
 class Kitoro extends AbstractEntity implements EntityInterface
 {
@@ -118,7 +119,32 @@ class Kitoro extends AbstractEntity implements EntityInterface
     public function delete(): false|string
     {
         try {
-            // TODO legvégső esetben kell csak
+            if (!isset($this->getParameters->id)) {
+                throw new Exception('Missing id parameter or empty');
+            }
+            $storageEntity = new Storage($this->getParameters);
+            $kitoro = json_decode($this->get());
+            $storage = $storageEntity->get();
+            if ($kitoro->db != $storage->db) {
+                throw new Exception('Some wings on field!');
+            }
+
+            $deleteFromStorage = $storageEntity->deleteWing();
+
+            if (!$deleteFromStorage) {
+                throw new Exception('Can not delete from storage!');
+            }
+
+            $sql = "
+                DELETE FROM " . self::TABLE_NAME . "
+                WHERE id = {$this->getParameters->id}
+            ";
+
+            $this->mysql->delete($sql);
+
+            return $this->jsonResponse([
+                'status' => 'success'
+            ]);
         } catch (Exception $exception) {
             return $this->getExceptionFormat($exception->getMessage());
         }
