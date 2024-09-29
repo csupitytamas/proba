@@ -10,13 +10,18 @@ new Vue({
             name_en: null,
             db: null,
             hossz: null,
+            kep: null
         },
         error: {
             show: false,
             message: 'Keresd a buzi fejlesztőket, hogy tudj miért rinyálni.'
-        }
+        },
+        selectedFile: null
     },
     methods: {
+        onFileChange(event) {
+            this.selectedFile = event.target.file;
+        },
         postRequest: async function (url, data) {
             try {
                 const options = {
@@ -45,6 +50,11 @@ new Vue({
                     formData.append(key, value);
                 }
             })
+
+            if (this.selectedFile) {
+                formData.append('file', this.selectedFile);
+            }
+
             this.$data.error.show = false
             let response = await this.postRequest(url, formData)
             if (response.data.status == 'success') {

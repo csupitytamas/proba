@@ -78,7 +78,7 @@ class Rudak extends AbstractEntity implements EntityInterface
         try {
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
 
-            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated,true);
+            $result = $this->insertData(self::TABLE_NAME, self::STRUCTURE_SCHEMA, $validated, true);
 
             if (empty($result)) {
                 return $this->jsonResponse([
@@ -86,6 +86,27 @@ class Rudak extends AbstractEntity implements EntityInterface
                     'message' => "Rudat nem lehet elmenteni."
                 ]);
             }
+
+            $hashedFilename = hash('md5', $validated->kep . time());
+            $validated->kep = $hashedFilename;
+
+            $uploadDir = '\\app\img';
+
+            $targetFile = $uploadDir . $validated->kep;
+
+            $maxSize = 1024 * 1024;
+            if ($_FILES['kep']['size'] > $maxSize) {
+                return $this->jsonResponse(['status' => 'error', 'message' => 'Maximalis méret 10 MB']);
+            }
+
+
+            if (move_uploaded_file($_FILES['kep']['tmp_name'], $targetFile)) {
+                $validated->kep = $hashedFilename;
+                return $this->jsonResponse(['status' => 'success']);
+            } else {
+                return $this->jsonResponse(['status' => 'error', 'message' => 'Hiba a fájl mentésekor']);
+            }
+
 
             $this->getParameters->id = $result;
             $rud = json_decode($this->get());
