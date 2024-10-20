@@ -44,10 +44,10 @@
             </div>
             <div class="flex flex-col">
                 <div class="flex flex-col justify-center items-center">
-                    <input v-model="form.name_en" type="text" placeholder="Angol neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" >
-                    <input v-model="form.name_hu" type="text" placeholder="Magyar neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
-                    <input v-model="form.db" type="number" placeholder="Darabszám" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
-                    <select v-model="form.hossz"
+                    <input v-model="this.$data.form.name_en" type="text" placeholder="Angol neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" >
+                    <input v-model="this.$data.form.name_hu" type="text" placeholder="Magyar neve" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
+                    <input v-model="this.$data.form.db" type="number" placeholder="Darabszám" class="w-full bg-white border border-black rounded-xl text-black text-lg text-center" />
+                    <select v-model="this.$data.form.hossz"
                             v-if="selected.type === 'pole'"
                             class="w-full px-4 py-3 bg-white border border-black rounded-xl text-black text-lg text-center">
                         <option disabled selected>Válassz hosszúságot</option>
@@ -56,7 +56,8 @@
                         <option value="2.5">2.5</option>
                         <option value="2">2</option>
                     </select>
-                    <input type="file" class="file-input file-input-bordered max-w-xs mt-4 w-3/4" />
+                    <img v-if="form.kep !== 'null' || typeof form.kep == null" :src="this.$data.form.kep" alt="image">
+                    <input v-else type="file" class="file-input file-input-bordered max-w-xs mt-4 w-3/4"/>
                 </div>
                 <button @click="sendForm" class="button-ok rounded-xl">Update</button>
             </div>

@@ -42,17 +42,24 @@ new Vue({
             return '/admin/edit?type=pole&id=' + id
         },
         deleteItem: async function (id, wing = true) {
-            let url = '';
-            if (wing) {
-                url = '/wings/delete-wing?id=' + id
-            } else {
-                url = '/poles/delete-pole?id=' + id
-            }
+            if (confirm("Biztosan törölni szeretné ezt az elemet?")) {
+                let url = '';
+                if (wing) {
+                    url = '/wings/delete-wing?id=' + id;
+                } else {
+                    url = '/poles/delete-pole?id=' + id;
+                }
 
-            let response = await this.getRequest(url)
-            if (response.data.status === 'success') {
-                await this.getWingsData();
-                await this.getPolesData();
+                let response = await this.getRequest(url);
+                if (response.data.status === 'success') {
+                    await this.getWingsData();
+                    await this.getPolesData();
+                    alert(wing ? "A kiválasztott kitörő törölve lett!" : "A kiválasztott rúd törölve lett!");
+                } else {
+                    alert("Hiba történt a törlés során.");
+                }
+            } else {
+                alert("A törlési művelet megszakítva.");
             }
         }
     }

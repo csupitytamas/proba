@@ -24,17 +24,18 @@ new Vue({
     methods: {
         getData: async function () {
             let url = '';
-            if (this.$data.selected.type === 'wing') {
-                url = '/wings/get-wing?id=' + this.$data.selected.id
+            if (this.selected.type === 'wing') {
+                url = '/wings/get-wing?id=' + this.selected.id
             } else {
-                url = '/poles/get-pole?id=' + this.$data.selected.id
+                url = '/poles/get-pole?id=' + this.selected.id
             }
 
             let response = await this.getRequest(url)
-            this.$data.form.name_hu = response.data.name_hu;
-            this.$data.form.name_en = response.data.name_en;
-            this.$data.form.db = response.data.db;
-            this.$data.form.hossz = response.data.hossz;
+            this.form.name_hu = response.data.name_hu;
+            this.form.name_en = response.data.name_en;
+            this.form.db = response.data.db;
+            this.form.hossz = response.data.hossz;
+            this.form.kep = response.data.kep;
         },
         getUrlParameters: function () {
             let params = new URLSearchParams(window.location.search);
@@ -44,57 +45,60 @@ new Vue({
             if (typeof  paramsObj.type  == 'undefined' || typeof  paramsObj.id  == 'undefined') {
                 location.href = '/admin'
             }
-            this.$data.selected.type = paramsObj.type;
-            this.$data.selected.id = paramsObj.id;
+            this.selected.type = paramsObj.type;
+            this.selected.id = paramsObj.id;
         },
         getRequest: async function (url) {
             try {
                 return await axios.get(url)
             } catch (error) {
-                this.$data.error.show = true
+                this.error.show = true
                 console.log(error)
             }
-        },
-        onFileChange(event) {
-            this.selectedFile = event.target.file;
         },
         postRequest: async function (url, data) {
             try {
                 const options = {
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    headers: {'Content-Type': 'multipart/form-data'}
                 };
 
                 return await axios.post(url, data, options)
             } catch (error) {
-                this.$data.error.show = true
+                this.error.show = true
                 console.log(error)
             }
         },
-        sendForm: async function () {
-            let url = '';
-            if (this.$data.selected.type === 'wing') {
-                url = '/wings/update-wing';
-            } else {
-                url = '/poles/update-pole';
-            }
-            let formData = new FormData();
-            formData.append('id', this.$data.selected.id);
-            Object.entries(this.$data.form).forEach(([key, value]) => {
-                if (this.$data.selected.type === 'wing') {
-                    if (key !== 'hossz') {
+        sendForm: async function (event) {
+            try {
+                let url = '';
+                if (this.selected.type === 'wing') {
+                    url = '/wings/update-wing';
+                } else {
+                    url = '/poles/update-pole';
+                }
+                let formData = new FormData();
+                formData.append('id', this.selected.id);
+                Object.entries(this.form).forEach(([key, value]) => {
+                    if (this.selected.type === 'wing') {
+                        if (key !== 'hossz') {
+                            formData.append(key, value);
+                        }
+                    } else {
                         formData.append(key, value);
                     }
-                } else {
-                    formData.append(key, value);
+                })
+                const fileInput = event.target.closest('div').querySelector('input[type="file"]');
+                if (fileInput && fileInput.files.length > 0) {
+                    formData.append('kep', fileInput.files[0]);
                 }
-            })
-            if (this.selectedFile) {
-                formData.append('file', this.selectedFile);
-            }
-            this.$data.error.show = false
-            let response = await this.postRequest(url, formData)
-            if (response.data.status == 'success') {
-                location.href = '/admin'
+                this.error.show = false
+                let response = await this.postRequest(url, formData)
+                if (response.data.status == 'success') {
+                    location.href = '/admin'
+                }
+            } catch (error) {
+                console.log(error)
+                this.error.show = true;
             }
         }
     }

@@ -73,47 +73,30 @@ class Rudak extends AbstractEntity implements EntityInterface
     /**
      * @return false|string
      */
-    public function create(): false|string
-    {
+    public function create(): false|string {
         try {
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
 
-            $result = $this->insertData(self::TABLE_NAME, self::STRUCTURE_SCHEMA, $validated, true);
+            if(isset($_FILES['kep'])) {
+                $image = new Image();
+                $hashedImageName = $image->store($_FILES['kep']);
+                if (!empty($hashedImageName)) {
+                    $validated->kep = $hashedImageName;
+                }
+            }
 
+            $result = $this->insertData(self::TABLE_NAME, self::STRUCTURE_SCHEMA, $validated, true);
             if (empty($result)) {
                 return $this->jsonResponse([
                     'status' => 'error',
                     'message' => "Rudat nem lehet elmenteni."
                 ]);
             }
-
-            $hashedFilename = hash('md5', $validated->kep . time());
-            $validated->kep = $hashedFilename;
-
-            $uploadDir = '\\app\img';
-
-            $targetFile = $uploadDir . $validated->kep;
-
-            $maxSize = 1024 * 1024;
-            if ($_FILES['kep']['size'] > $maxSize) {
-                return $this->jsonResponse(['status' => 'error', 'message' => 'Maximalis méret 10 MB']);
-            }
-
-
-            if (move_uploaded_file($_FILES['kep']['tmp_name'], $targetFile)) {
-                $validated->kep = $hashedFilename;
-                return $this->jsonResponse(['status' => 'success']);
-            } else {
-                return $this->jsonResponse(['status' => 'error', 'message' => 'Hiba a fájl mentésekor']);
-            }
-
-
             $this->getParameters->id = $result;
             $rud = json_decode($this->get());
             $rud->rudak = $rud->id;
             $storage = new Storage($rud);
             $storage->addPoles();
-
             return $this->jsonResponse([
                 'status' => 'success'
             ]);
@@ -128,9 +111,16 @@ class Rudak extends AbstractEntity implements EntityInterface
             if (!isset($_POST['id'])) {
                 throw new Exception('Missing id parameter or empty');
             }
-
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
             $validated->id = $_POST['id'];
+
+            if(isset($_FILES['kep'])) {
+                $image = new Image();
+                $hashedImageName = $image->store($_FILES['kep']);
+                if (!empty($hashedImageName)) {
+                    $validated->kep = $hashedImageName;
+                }
+            }
 
             $this->updateData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated);
 
@@ -168,6 +158,13 @@ class Rudak extends AbstractEntity implements EntityInterface
 
             $this->mysql->delete($sql);
 
+            $imageFilePath = $rud->kep;
+            if (file_exists($imageFilePath)) {
+                @unlink($imageFilePath);
+            } else {
+                throw new Exception('File not found: ' . $imageFilePath);
+            }
+
             return $this->jsonResponse([
                 'status' => 'success'
             ]);
@@ -175,4 +172,5 @@ class Rudak extends AbstractEntity implements EntityInterface
             return $this->getExceptionFormat($exception->getMessage());
         }
     }
+
 }
