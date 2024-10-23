@@ -56,8 +56,9 @@
                         <option value="2.5">2.5</option>
                         <option value="2">2</option>
                     </select>
-                    <img v-if="form.kep !== 'null' || typeof form.kep == null" :src="this.$data.form.kep" alt="image">
+                    <img v-if="form.kep !== 'null' || typeof form.kep == null" :src="this.$data.form.kep" alt="image"/>
                     <input v-else type="file" class="file-input file-input-bordered max-w-xs mt-4 w-3/4"/>
+                    <svg v-show="showElement" v-if="form.kep" @click="clearImage" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="cursor: pointer;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
                 </div>
                 <button @click="sendForm" class="button-ok rounded-xl">Update</button>
             </div>

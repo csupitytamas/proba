@@ -15,7 +15,8 @@ new Vue({
         error: {
             show: false,
             message: 'Keresd a buzi fejlesztőket, hogy tudj miért rinyálni.'
-        }
+        },
+        showElement: true,
     },
     mounted() {
         this.getUrlParameters()
@@ -100,6 +101,13 @@ new Vue({
                 console.log(error)
                 this.error.show = true;
             }
-        }
+
+        },
+        clearImage: function () {
+            this.form.kep = 'null';
+            this.showElement = false
+        },
+
     }
+
 });
