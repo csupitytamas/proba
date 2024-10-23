@@ -60,7 +60,7 @@
                         <p>{{ wing.db }}</p>
                     </td>
                     <td class="p-3">
-                        <p>{{ wing.kep }}</p>
+                        <img :src="wing.kep" alt="kitoro image"/>
                     </td>
                     <td class="flex flex-row justify-center p-3 space-x-2">
                         <a :href="calculateWingUrl(wing.id)">

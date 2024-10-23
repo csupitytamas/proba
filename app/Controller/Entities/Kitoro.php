@@ -12,6 +12,7 @@ use http\Exception\BadMethodCallException;
 class Kitoro extends AbstractEntity implements EntityInterface
 {
     use Response;
+
     protected const TABLE_NAME = 'kitoro';
     protected const STRUCTURE_SCHEMA = [
         'name_hu',
@@ -65,29 +66,34 @@ class Kitoro extends AbstractEntity implements EntityInterface
         }
     }
 
+
     /**
      * @return false|string
      */
-    public function create(): false|string
-    {
+    public function create(): false|string {
         try {
             $validated = $this->validate(self::STRUCTURE_SCHEMA, $_POST);
 
-            $result = $this->insertData(self::TABLE_NAME,self::STRUCTURE_SCHEMA, $validated, true);
+            if(isset($_FILES['kep'])) {
+                $image = new Image();
+                $hashedImageName = $image->store($_FILES['kep']);
+                if (!empty($hashedImageName)) {
+                    $validated->kep = $hashedImageName;
+                }
+            }
 
+            $result = $this->insertData(self::TABLE_NAME, self::STRUCTURE_SCHEMA, $validated, true);
             if (empty($result)) {
                 return $this->jsonResponse([
                     'status' => 'error',
                     'message' => "Kitorot nem lehet elmenteni."
                 ]);
             }
-
             $this->getParameters->id = $result;
             $kitoro = json_decode($this->get());
             $kitoro->kitoro = $kitoro->id;
             $storage = new Storage($kitoro);
             $storage->addWings();
-
             return $this->jsonResponse([
                 'status' => 'success'
             ]);
