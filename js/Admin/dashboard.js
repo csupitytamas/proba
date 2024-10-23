@@ -11,7 +11,27 @@ new Vue({
         poles: null,
         wings: null
     },
+    computed: {
+        imageStyle() {
 
+            if (window.innerWidth <= 1200 && window.innerHeight <= 1600) {
+                return {
+                    width: 'auto',
+                    height: 'auto',
+                    margin: '0',
+                    borderRadius: '7px'
+                };
+            } else {
+                return {
+                    width: '400px',
+                    height: '20%',
+                    margin: '0',
+                    float: 'right',
+                    borderRadius: '7px'
+                };
+            }
+        }
+    },
     mounted() {
         this.getWingsData();
         this.getPolesData();
